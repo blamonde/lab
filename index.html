@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Grey / Transparent</title>
+<style>
+  :root { --ink:#111; --line:#d8d8d8; --soft:#f3f3f3; }
+  * { box-sizing:border-box; }
+  body {
+    margin:0; font-family:Arial, Helvetica, sans-serif; color:var(--ink);
+    background:#fff; min-height:100vh;
+  }
+  main { width:min(1100px, calc(100% - 40px)); margin:40px auto; }
+  header { display:flex; justify-content:space-between; gap:24px; align-items:end; margin-bottom:24px; }
+  h1 { margin:0; font-size:28px; font-weight:600; letter-spacing:-.03em; }
+  header p { margin:0; color:#666; font-size:14px; }
+
+  .workspace { display:grid; grid-template-columns:minmax(0,1fr) 280px; gap:20px; }
+  .preview {
+    min-height:580px; border:1px solid var(--line); position:relative; overflow:hidden;
+    display:flex; align-items:center; justify-content:center;
+    background-color:#fff;
+    background-image:
+      linear-gradient(45deg,#eee 25%,transparent 25%),
+      linear-gradient(-45deg,#eee 25%,transparent 25%),
+      linear-gradient(45deg,transparent 75%,#eee 75%),
+      linear-gradient(-45deg,transparent 75%,#eee 75%);
+    background-size:24px 24px;
+    background-position:0 0,0 12px,12px -12px,-12px 0;
+  }
+  .preview.drag { outline:2px solid #111; outline-offset:-2px; }
+  canvas { max-width:100%; max-height:580px; display:none; }
+  .empty { text-align:center; padding:30px; }
+  .empty strong { display:block; font-size:18px; margin-bottom:8px; }
+  .empty span { color:#777; font-size:14px; }
+
+  aside { border:1px solid var(--line); padding:20px; height:max-content; }
+  .control { padding-bottom:20px; margin-bottom:20px; border-bottom:1px solid var(--line); }
+  label { display:flex; justify-content:space-between; font-size:13px; margin-bottom:10px; }
+  input[type=range] { width:100%; accent-color:#111; }
+  button, .upload {
+    width:100%; border:1px solid #111; background:#111; color:#fff;
+    padding:13px 14px; font:inherit; font-size:14px; cursor:pointer; text-align:center;
+  }
+  .upload { display:block; margin-bottom:10px; }
+  button.secondary { background:#fff; color:#111; }
+  button:disabled { opacity:.35; cursor:not-allowed; }
+  input[type=file] { display:none; }
+  .note { font-size:12px; line-height:1.45; color:#777; margin:14px 0 0; }
+  .swatch { width:12px; height:12px; background:#949494; display:inline-block; vertical-align:-1px; margin-right:6px; }
+
+  @media (max-width:760px) {
+    main { width:min(100% - 24px, 1100px); margin:20px auto; }
+    header { display:block; }
+    header p { margin-top:8px; }
+    .workspace { grid-template-columns:1fr; }
+    .preview { min-height:420px; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Grey / Transparent</h1>
+    <p><span class="swatch"></span>Noir → #949494 · Blanc → transparent</p>
+  </header>
+
+  <section class="workspace">
+    <div class="preview" id="dropZone">
+      <div class="empty" id="empty">
+        <strong>Dépose une image ici</strong>
+        <span>ou utilise le bouton « Choisir une image »</span>
+      </div>
+      <canvas id="canvas"></canvas>
+    </div>
+
+    <aside>
+      <label class="upload" for="fileInput">Choisir une image</label>
+      <input id="fileInput" type="file" accept="image/png,image/jpeg,image/webp">
+
+      <div class="control">
+        <label for="blackPoint">
+          <span>Zones sombres</span>
+          <span id="blackPointValue">0</span>
+        </label>
+        <input id="blackPoint" type="range" min="0" max="220" value="0" step="1">
+
+        <label for="midtones" style="margin-top:18px">
+          <span>Tons moyens</span>
+          <span id="midtonesValue">0</span>
+        </label>
+        <input id="midtones" type="range" min="-100" max="100" value="0" step="1">
+
+        <label for="whitePoint" style="margin-top:18px">
+          <span>Zones claires</span>
+          <span id="whitePointValue">255</span>
+        </label>
+        <input id="whitePoint" type="range" min="35" max="255" value="255" step="1">
+
+        <p class="note" style="margin-top:14px">
+          Sombres contrôle où le gris devient complètement opaque. Claires contrôle où l’image devient complètement transparente. Tons moyens ajuste la transition entre les deux.
+        </p>
+      </div>
+
+      <div class="control">
+        <label for="renderMode"><span>Mode d’impression</span></label>
+        <select id="renderMode" style="width:100%;padding:11px;border:1px solid #111;background:#fff;font:inherit;font-size:14px">
+          <option value="continuous">Gris continu</option>
+          <option value="halftone">Trame de points</option>
+          <option value="dissolve">Dissolve</option>
+        </select>
+
+        <div id="halftoneControls" style="display:none">
+          <label for="lpi" style="margin-top:18px"><span>Trame</span><span id="lpiValue">35 LPI</span></label>
+          <input id="lpi" type="range" min="10" max="100" value="35" step="1">
+          <label for="angle" style="margin-top:18px"><span>Angle</span><span id="angleValue">45°</span></label>
+          <input id="angle" type="range" min="0" max="90" value="45" step="1">
+        </div>
+
+        <div id="dissolveControls" style="display:none">
+          <label for="dissolveScale" style="margin-top:18px"><span>Taille du grain</span><span id="dissolveScaleValue">1 px</span></label>
+          <input id="dissolveScale" type="range" min="1" max="12" value="1" step="1">
+
+          <label for="dissolveDensity" style="margin-top:18px"><span>Densité</span><span id="dissolveDensityValue">100 %</span></label>
+          <input id="dissolveDensity" type="range" min="25" max="175" value="100" step="1">
+
+          <label for="dissolveClump" style="margin-top:18px"><span>Agrégation</span><span id="dissolveClumpValue">0</span></label>
+          <input id="dissolveClump" type="range" min="0" max="100" value="0" step="1">
+
+          <label for="dissolveSeed" style="margin-top:18px"><span>Variation</span><span id="dissolveSeedValue">1</span></label>
+          <input id="dissolveSeed" type="range" min="1" max="20" value="1" step="1">
+
+          <p class="note" style="margin-top:14px">
+            Dissolve transforme l’opacité en une distribution de pixels ou de grains #949494 entièrement opaques. Densité bouche ou ouvre l’image; agrégation regroupe progressivement le grain.
+          </p>
+        </div>
+
+        <label for="printWidth" style="margin-top:18px"><span>Largeur d’impression</span><span id="printWidthValue">12 po</span></label>
+        <input id="printWidth" type="range" min="2" max="40" value="12" step="0.5">
+
+        <label for="dpi" style="margin-top:18px"><span>Résolution export</span><span id="dpiValue">300 DPI</span></label>
+        <input id="dpi" type="range" min="150" max="600" value="300" step="50">
+
+        <p class="note" id="exportInfo" style="margin-top:14px"></p>
+      </div>
+
+      <button id="download" disabled>Télécharger PNG</button>
+      <button id="reset" class="secondary" disabled style="margin-top:10px">Réinitialiser</button>
+
+      <p class="note">
+        Le traitement est fait localement dans ton navigateur. L’image n’est envoyée nulle part.
+        Le PNG exporté conserve la résolution originale.
+      </p>
+    </aside>
+  </section>
+</main>
+
+<script>
+(() => {
+  const fileInput = document.getElementById('fileInput');
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d', { willReadFrequently:true });
+  const blackPoint = document.getElementById('blackPoint');
+  const midtones = document.getElementById('midtones');
+  const whitePoint = document.getElementById('whitePoint');
+  const blackPointValue = document.getElementById('blackPointValue');
+  const midtonesValue = document.getElementById('midtonesValue');
+  const whitePointValue = document.getElementById('whitePointValue');
+  const download = document.getElementById('download');
+  const reset = document.getElementById('reset');
+  const empty = document.getElementById('empty');
+  const dropZone = document.getElementById('dropZone');
+  const renderMode = document.getElementById('renderMode');
+  const halftoneControls = document.getElementById('halftoneControls');
+  const dissolveControls = document.getElementById('dissolveControls');
+  const dissolveScale = document.getElementById('dissolveScale');
+  const dissolveDensity = document.getElementById('dissolveDensity');
+  const dissolveClump = document.getElementById('dissolveClump');
+  const dissolveSeed = document.getElementById('dissolveSeed');
+  const dissolveScaleValue = document.getElementById('dissolveScaleValue');
+  const dissolveDensityValue = document.getElementById('dissolveDensityValue');
+  const dissolveClumpValue = document.getElementById('dissolveClumpValue');
+  const dissolveSeedValue = document.getElementById('dissolveSeedValue');
+  const lpi = document.getElementById('lpi');
+  const angle = document.getElementById('angle');
+  const printWidth = document.getElementById('printWidth');
+  const dpi = document.getElementById('dpi');
+  const lpiValue = document.getElementById('lpiValue');
+  const angleValue = document.getElementById('angleValue');
+  const printWidthValue = document.getElementById('printWidthValue');
+  const dpiValue = document.getElementById('dpiValue');
+  const exportInfo = document.getElementById('exportInfo');
+
+  let original = null;
+  let originalName = 'image';
+
+  function loadFile(file) {
+    if (!file || !file.type.startsWith('image/')) return;
+    originalName = file.name.replace(/\.[^.]+$/, '') || 'image';
+
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.drawImage(img,0,0);
+        original = ctx.getImageData(0,0,canvas.width,canvas.height);
+        blackPoint.value = 0;
+        midtones.value = 0;
+        whitePoint.value = 255;
+        updateLabels();
+        empty.style.display = 'none';
+        canvas.style.display = 'block';
+        download.disabled = false;
+        reset.disabled = false;
+        render();
+        updatePrintUI();
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // Tonal mapping:
+  // blackPoint = luminance at/below which the grey ink is fully opaque.
+  // whitePoint = luminance at/above which the image is fully transparent.
+  // midtones = gamma-like control for the transition between both endpoints.
+  function updateLabels() {
+    blackPointValue.textContent = blackPoint.value;
+    const m = Number(midtones.value);
+    midtonesValue.textContent = m > 0 ? '+' + m : m;
+    whitePointValue.textContent = whitePoint.value;
+  }
+
+  function render() {
+    if (!original) return;
+
+    let black = Number(blackPoint.value);
+    let white = Number(whitePoint.value);
+
+    // Keep a useful tonal interval even if the sliders cross.
+    if (black >= white - 1) {
+      if (document.activeElement === blackPoint) {
+        white = Math.min(255, black + 2);
+        whitePoint.value = white;
+      } else {
+        black = Math.max(0, white - 2);
+        blackPoint.value = black;
+      }
+    }
+
+    updateLabels();
+
+    const mid = Number(midtones.value);
+    // Positive = denser / more blocked midtones.
+    // Negative = more open / transparent midtones.
+    const gamma = Math.pow(2, -mid / 100);
+
+    const src = original.data;
+    const out = new ImageData(original.width, original.height);
+    const dst = out.data;
+
+    for (let i=0; i<src.length; i+=4) {
+      const lum = 0.2126*src[i] + 0.7152*src[i+1] + 0.0722*src[i+2];
+
+      let t = (lum - black) / (white - black);
+      t = Math.max(0, Math.min(1, t));
+      t = Math.pow(t, gamma);
+
+      // black endpoint => opaque; white endpoint => transparent
+      const alpha = Math.round((1 - t) * 255 * (src[i+3] / 255));
+
+      dst[i]   = 0x94;
+      dst[i+1] = 0x94;
+      dst[i+2] = 0x94;
+      dst[i+3] = alpha;
+    }
+
+    ctx.putImageData(out,0,0);
+  }
+
+  function updatePrintUI() {
+    halftoneControls.style.display = renderMode.value === 'halftone' ? 'block' : 'none';
+    dissolveControls.style.display = renderMode.value === 'dissolve' ? 'block' : 'none';
+    dissolveScaleValue.textContent = dissolveScale.value + ' px';
+    dissolveDensityValue.textContent = dissolveDensity.value + ' %';
+    dissolveClumpValue.textContent = dissolveClump.value;
+    dissolveSeedValue.textContent = dissolveSeed.value;
+    lpiValue.textContent = lpi.value + ' LPI';
+    angleValue.textContent = angle.value + '°';
+    printWidthValue.textContent = printWidth.value + ' po';
+    dpiValue.textContent = dpi.value + ' DPI';
+    if (original) {
+      const w = Math.round(Number(printWidth.value) * Number(dpi.value));
+      const h = Math.round(w * original.height / original.width);
+      exportInfo.textContent = `Export : ${w} × ${h} px · ${(w/Number(dpi.value)).toFixed(1)} × ${(h/Number(dpi.value)).toFixed(1)} po à ${dpi.value} DPI`;
+    } else {
+      exportInfo.textContent = 'Choisis une image pour calculer la taille d’export.';
+    }
+  }
+
+  function makePrintCanvas() {
+    const out = document.createElement('canvas');
+    const targetW = Math.max(1, Math.round(Number(printWidth.value) * Number(dpi.value)));
+    const targetH = Math.max(1, Math.round(targetW * canvas.height / canvas.width));
+    out.width = targetW; out.height = targetH;
+    const octx = out.getContext('2d');
+
+    if (renderMode.value === 'continuous') {
+      octx.imageSmoothingEnabled = true;
+      octx.imageSmoothingQuality = 'high';
+      octx.drawImage(canvas, 0, 0, targetW, targetH);
+      return out;
+    }
+
+    if (renderMode.value === 'dissolve') {
+      // Build a stochastic bitmap: every mark is fully opaque #949494 or transparent.
+      // This behaves like Photoshop's Dissolve blend logic, but adds grain size,
+      // density and spatial aggregation controls for print experimentation.
+      const sample = document.createElement('canvas');
+      sample.width = canvas.width; sample.height = canvas.height;
+      const sctx = sample.getContext('2d');
+      sctx.drawImage(canvas,0,0);
+      const data = sctx.getImageData(0,0,sample.width,sample.height).data;
+
+      const g = Math.max(1, Number(dissolveScale.value));
+      const density = Number(dissolveDensity.value) / 100;
+      const clump = Number(dissolveClump.value) / 100;
+      const seed = Number(dissolveSeed.value);
+
+      // Deterministic hash/noise so the same variation always exports identically.
+      function hash(x,y,k) {
+        let n = (x * 374761393 + y * 668265263 + k * 1442695041) | 0;
+        n = (n ^ (n >>> 13)) * 1274126177;
+        n = n ^ (n >>> 16);
+        return (n >>> 0) / 4294967295;
+      }
+      function smoothNoise(x,y) {
+        // Low-frequency noise used only for the aggregation control.
+        const scale = 18;
+        const fx=x/scale, fy=y/scale;
+        const x0=Math.floor(fx), y0=Math.floor(fy);
+        const tx=fx-x0, ty=fy-y0;
+        const sm=t=>t*t*(3-2*t);
+        const a=hash(x0,y0,seed+91), b=hash(x0+1,y0,seed+91);
+        const c=hash(x0,y0+1,seed+91), d=hash(x0+1,y0+1,seed+91);
+        const u=sm(tx), v=sm(ty);
+        return (a*(1-u)+b*u)*(1-v)+(c*(1-u)+d*u)*v;
+      }
+
+      octx.fillStyle = '#949494';
+      for (let y=0, gy=0; y<targetH; y+=g, gy++) {
+        for (let x=0, gx=0; x<targetW; x+=g, gx++) {
+          const sx = Math.max(0, Math.min(sample.width-1, Math.floor((x+g/2)/targetW*sample.width)));
+          const sy = Math.max(0, Math.min(sample.height-1, Math.floor((y+g/2)/targetH*sample.height)));
+          let a = data[(sy*sample.width+sx)*4+3] / 255;
+          a = Math.max(0, Math.min(1, a * density));
+
+          // Blend fine random noise with a smooth noise field.
+          const fine = hash(gx,gy,seed);
+          const coarse = smoothNoise(gx,gy);
+          const threshold = fine*(1-clump) + coarse*clump;
+
+          if (threshold < a) octx.fillRect(x,y,Math.min(g,targetW-x),Math.min(g,targetH-y));
+        }
+      }
+      return out;
+    }
+
+    // Halftone is generated mathematically at export resolution, so edges remain clean
+    // even when the source image is modest in size.
+    const sample = document.createElement('canvas');
+    sample.width = canvas.width; sample.height = canvas.height;
+    const sctx = sample.getContext('2d');
+    sctx.drawImage(canvas,0,0);
+    const data = sctx.getImageData(0,0,sample.width,sample.height).data;
+
+    const cellsPerInch = Number(lpi.value);
+    const cell = Number(dpi.value) / cellsPerInch;
+    const theta = Number(angle.value) * Math.PI / 180;
+    const cos = Math.cos(theta), sin = Math.sin(theta);
+    const diag = Math.hypot(targetW,targetH);
+    const cx=targetW/2, cy=targetH/2;
+
+    octx.fillStyle = '#949494';
+
+    // Rotated halftone grid. Dot area corresponds to source opacity.
+    for (let gy=-diag; gy<=diag; gy+=cell) {
+      for (let gx=-diag; gx<=diag; gx+=cell) {
+        const x = cx + gx*cos - gy*sin;
+        const y = cy + gx*sin + gy*cos;
+        if (x < -cell || y < -cell || x > targetW+cell || y > targetH+cell) continue;
+
+        const sx = Math.max(0, Math.min(sample.width-1, Math.floor(x/targetW*sample.width)));
+        const sy = Math.max(0, Math.min(sample.height-1, Math.floor(y/targetH*sample.height)));
+        const a = data[(sy*sample.width+sx)*4+3] / 255;
+        if (a <= 0.001) continue;
+
+        // Area coverage: radius grows with sqrt(alpha).
+        const r = Math.sqrt(a) * cell * 0.5;
+        octx.beginPath();
+        octx.arc(x,y,r,0,Math.PI*2);
+        octx.fill();
+      }
+    }
+    return out;
+  }
+
+  fileInput.addEventListener('change', e => loadFile(e.target.files[0]));
+  [blackPoint, midtones, whitePoint].forEach(el => el.addEventListener('input', render));
+  [renderMode, lpi, angle, dissolveScale, dissolveDensity, dissolveClump, dissolveSeed, printWidth, dpi].forEach(el => el.addEventListener('input', updatePrintUI));
+  renderMode.addEventListener('change', updatePrintUI);
+
+  reset.addEventListener('click', () => {
+    blackPoint.value = 0;
+    midtones.value = 0;
+    whitePoint.value = 255;
+    render();
+  });
+
+  download.addEventListener('click', () => {
+    const exportCanvas = makePrintCanvas();
+    exportCanvas.toBlob(blob => {
+      if (!blob) return;
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      const suffix = renderMode.value === 'halftone'
+        ? `-halftone-${lpi.value}lpi`
+        : renderMode.value === 'dissolve'
+          ? `-dissolve-${dissolveScale.value}px`
+          : '-grey-transparent';
+      a.download = originalName + suffix + `-${dpi.value}dpi.png`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }, 'image/png');
+  });
+
+  ['dragenter','dragover'].forEach(type => {
+    dropZone.addEventListener(type, e => {
+      e.preventDefault();
+      dropZone.classList.add('drag');
+    });
+  });
+
+  ['dragleave','drop'].forEach(type => {
+    dropZone.addEventListener(type, e => {
+      e.preventDefault();
+      dropZone.classList.remove('drag');
+    });
+  });
+
+  dropZone.addEventListener('drop', e => loadFile(e.dataTransfer.files[0]));
+  updatePrintUI();
+})();
+</script>
+</body>
+</html>
