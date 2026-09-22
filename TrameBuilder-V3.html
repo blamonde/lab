@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trame Studio</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* Typography Apple HIG */
+        body, button, input, select, option { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important; }
+        
+        /* Apple-like soft shadows and glassmorphism */
+        .ios-shadow { box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02); }
+        .ios-glass { background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(0,0,0,0.05); }
+        
+        /* Custom Range Slider iOS Style */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+            margin: 8px 0;
+        }
+        input[type=range]:focus { outline: none; }
+        
+        /* Track */
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #E5E5EA;
+            border-radius: 2px;
+        }
+        
+        /* Thumb */
+        input[type=range]::-webkit-slider-thumb {
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #FFFFFF;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.08);
+            cursor: pointer;
+            -webkit-appearance: none;
+            margin-top: -8px;
+            transition: transform 0.1s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        input[type=range]:active::-webkit-slider-thumb {
+            transform: scale(1.15);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-[#F5F5F7] text-[#1D1D1F] antialiased selection:bg-[#007AFF] selection:text-white flex flex-col">
+
+    <!-- App Header -->
+    <header class="ios-glass sticky top-0 z-50 px-6 py-4 flex justify-between items-center">
+        <h1 class="text-[17px] font-semibold tracking-tight">Trame Studio</h1>
+        <span class="text-[11px] font-medium text-[#8E8E93] bg-[#E5E5EA] px-2 py-1 rounded-md uppercase tracking-wider">V1.0</span>
+    </header>
+
+    <!-- Main Layout -->
+    <div class="flex-1 flex flex-col md:flex-row p-4 md:p-8 gap-6 overflow-hidden">
+        
+        <!-- Controls Panel -->
+        <aside class="bg-white p-6 rounded-[24px] ios-shadow w-full md:w-[340px] flex-shrink-0 flex flex-col gap-6 overflow-y-auto">
+            
+            <!-- Section: Images -->
+            <div class="flex flex-col gap-4 pb-6 border-b border-[#E5E5EA]">
+                <div>
+                    <label class="text-[13px] font-semibold text-[#8E8E93] uppercase tracking-wider mb-2 block">Image Source 1</label>
+                    <label id="wrap1" class="flex flex-col items-center justify-center w-full py-4 px-4 bg-[#F2F2F7] text-[#007AFF] rounded-xl cursor-pointer hover:bg-[#E5E5EA] active:scale-[0.98] transition-all border border-transparent">
+                        <i data-lucide="upload" class="w-5 h-5 mb-1"></i>
+                        <span id="text1" class="text-[14px] font-medium text-center w-full truncate">Sélectionner une image</span>
+                        <input type="file" id="imageLoader1" accept="image/*" class="sr-only">
+                    </label>
+                </div>
+                <div>
+                    <label class="text-[13px] font-semibold text-[#8E8E93] uppercase tracking-wider mb-2 block">Image Source 2 (Optionnelle)</label>
+                    <label id="wrap2" class="flex flex-col items-center justify-center w-full py-4 px-4 bg-[#F2F2F7] text-[#007AFF] rounded-xl cursor-pointer hover:bg-[#E5E5EA] active:scale-[0.98] transition-all border border-transparent">
+                        <i data-lucide="upload" class="w-5 h-5 mb-1"></i>
+                        <span id="text2" class="text-[14px] font-medium text-center w-full truncate">Sélectionner une image</span>
+                        <input type="file" id="imageLoader2" accept="image/*" class="sr-only">
+                    </label>
+                </div>
+            </div>
+
+            <!-- Section: Paramètres -->
+            <div class="flex flex-col gap-5 pb-6 border-b border-[#E5E5EA]">
+                <div>
+                    <label class="text-[13px] font-semibold text-[#8E8E93] uppercase tracking-wider mb-2 block">Mode de transition</label>
+                    <div class="relative">
+                        <select id="transitionSelect" class="w-full appearance-none bg-[#F2F2F7] border-0 text-black font-medium text-[15px] py-3 px-4 pr-10 rounded-xl focus:ring-2 focus:ring-[#007AFF] focus:outline-none cursor-pointer hover:bg-[#E5E5EA] transition-colors">
+                            <option value="dissolve">Dissolve (Taille)</option>
+                            <option value="wipe">Balayage Linéaire</option>
+                            <option value="morph">Fondu Global</option>
+                        </select>
+                        <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-[#8E8E93]">
+                            <i data-lucide="chevron-down" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-[13px] font-semibold text-[#8E8E93] uppercase tracking-wider mb-2 block">Géométrie</label>
+                    <div class="relative">
+                        <select id="shapeSelect" class="w-full appearance-none bg-[#F2F2F7] border-0 text-black font-medium text-[15px] py-3 px-4 pr-10 rounded-xl focus:ring-2 focus:ring-[#007AFF] focus:outline-none cursor-pointer hover:bg-[#E5E5EA] transition-colors">
+                            <option value="square">Carré arrondi</option>
+                            <option value="diamond">Losange</option>
+                        </select>
+                        <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-[#8E8E93]">
+                            <i data-lucide="chevron-down" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex justify-between items-center mb-1">
+                        <label class="text-[13px] font-semibold text-[#8E8E93] uppercase tracking-wider m-0">Densité</label>
+                        <span id="densityValue" class="text-[13px] font-medium text-black">12px</span>
+                    </div>
+                    <input type="range" id="densitySlider" min="6" max="50" value="12">
+                </div>
+
+                <div>
+                    <div class="flex justify-between items-center mb-1">
+                        <label class="text-[13px] font-semibold text-[#8E8E93] uppercase tracking-wider m-0">Vitesse</label>
+                        <span id="speedValue" class="text-[13px] font-medium text-black">1.0x</span>
+                    </div>
+                    <input type="range" id="speedSlider" min="0.1" max="4" step="0.1" value="1.0">
+                </div>
+            </div>
+
+            <!-- Section: Actions -->
+            <div class="flex gap-3 mt-auto">
+                <button id="startBtn" disabled class="flex-1 flex items-center justify-center py-3 px-4 bg-[#F2F2F7] text-[#C7C7CC] rounded-xl font-semibold text-[15px] transition-all cursor-not-allowed">
+                    <i data-lucide="play" id="playIcon" class="w-4 h-4 mr-2"></i>
+                    <span id="startBtnText">Lecture</span>
+                </button>
+                <button id="recordBtn" disabled class="flex-1 flex items-center justify-center py-3 px-4 bg-[#F2F2F7] text-[#C7C7CC] rounded-xl font-semibold text-[15px] transition-all cursor-not-allowed">
+                    <i data-lucide="circle" id="recordIcon" class="w-4 h-4 mr-2 fill-none"></i>
+                    <span id="recordBtnText">Exporter</span>
+                </button>
+            </div>
+
+        </aside>
+
+        <!-- Canvas Panel -->
+        <main class="bg-white p-4 md:p-8 rounded-[24px] ios-shadow flex-1 flex items-center justify-center relative overflow-hidden group">
+            <!-- Subtle background pattern -->
+            <div class="absolute inset-0 bg-[radial-gradient(#E5E5EA_1px,transparent_1px)] [background-size:20px_20px] opacity-50 pointer-events-none"></div>
+            
+            <canvas id="canvas" class="relative z-10 max-w-full max-h-full object-contain rounded-lg shadow-sm border border-[#E5E5EA] bg-white"></canvas>
+        </main>
+    </div>
+
+    <script>
+        // Init Lucide
+        lucide.createIcons();
+
+        // UI Elements
+        const loader1 = document.getElementById('imageLoader1');
+        const loader2 = document.getElementById('imageLoader2');
+        const text1 = document.getElementById('text1');
+        const text2 = document.getElementById('text2');
+        
+        const transitionSelect = document.getElementById('transitionSelect');
+        const shapeSelect = document.getElementById('shapeSelect');
+        const densitySlider = document.getElementById('densitySlider');
+        const densityValue = document.getElementById('densityValue');
+        const speedSlider = document.getElementById('speedSlider');
+        const speedValue = document.getElementById('speedValue');
+        
+        const startBtn = document.getElementById('startBtn');
+        const startBtnText = document.getElementById('startBtnText');
+        const playIcon = document.getElementById('playIcon');
+        
+        const recordBtn = document.getElementById('recordBtn');
+        const recordBtnText = document.getElementById('recordBtnText');
+        const recordIcon = document.getElementById('recordIcon');
+        
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        // State
+        let img1 = new Image();
+        let img2 = new Image();
+        let imagesLoaded = [false, false];
+        let gridPoints = []; 
+        let darkness1 = []; 
+        let darkness2 = []; 
+
+        let isAnimating = false;
+        let animationId;
+        let startTime = 0;
+        let baseCycleTimeMs = 4000; 
+
+        let mediaRecorder;
+        let recordedChunks = [];
+        let isRecording = false;
+
+        // -- Event Listeners --
+        loader1.addEventListener('change', (e) => handleImage(e, 0, text1));
+        loader2.addEventListener('change', (e) => handleImage(e, 1, text2));
+        
+        shapeSelect.addEventListener('change', drawStaticFrame);
+        transitionSelect.addEventListener('change', drawStaticFrame);
+        
+        densitySlider.addEventListener('input', function() {
+            densityValue.textContent = this.value + 'px';
+            precalculateAll();
+        });
+
+        speedSlider.addEventListener('input', function() {
+            speedValue.textContent = this.value + 'x';
+        });
+
+        startBtn.addEventListener('click', toggleAnimation);
+        recordBtn.addEventListener('click', toggleRecording);
+
+        // -- Core Functions --
+        function handleImage(e, index, textElement) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            // Mise à jour de l'UI avec le style HIG
+            textElement.textContent = file.name;
+            textElement.parentElement.classList.remove('text-[#007AFF]', 'border-transparent', 'bg-[#F2F2F7]');
+            textElement.parentElement.classList.add('text-[#1D1D1F]', 'border-[#E5E5EA]', 'bg-white', 'shadow-sm');
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const targetImg = (index === 0) ? img1 : img2;
+                targetImg.onload = function() {
+                    imagesLoaded[index] = true;
+                    if (imagesLoaded[0]) {
+                        // Limiter la taille du canvas pour éviter des baisses de performances sur les très grandes images
+                        const MAX_DIMENSION = 1200;
+                        let w = img1.width;
+                        let h = img1.height;
+                        
+                        if (w > MAX_DIMENSION || h > MAX_DIMENSION) {
+                            const ratio = Math.min(MAX_DIMENSION / w, MAX_DIMENSION / h);
+                            w = Math.floor(w * ratio);
+                            h = Math.floor(h * ratio);
+                        }
+
+                        canvas.width = w;
+                        canvas.height = h;
+                        
+                        precalculateAll();
+                        
+                        // Activer et styliser les boutons (Primary & Accent)
+                        startBtn.disabled = false;
+                        startBtn.className = "flex-1 flex items-center justify-center py-3 px-4 bg-[#1D1D1F] text-white rounded-xl font-semibold text-[15px] transition-all hover:bg-[#333] active:scale-[0.98]";
+                        
+                        recordBtn.disabled = false;
+                        recordBtn.className = "flex-1 flex items-center justify-center py-3 px-4 bg-[#007AFF] text-white rounded-xl font-semibold text-[15px] transition-all hover:bg-[#006ee6] active:scale-[0.98]";
+                    }
+                }
+                targetImg.src = event.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+
+        function getFitParams(srcW, srcH, dstW, dstH) {
+            const srcRatio = srcW / srcH;
+            const dstRatio = dstW / dstH;
+            let width, height, x, y;
+
+            if (srcRatio > dstRatio) {
+                width = dstW;
+                height = dstW / srcRatio;
+                x = 0;
+                y = (dstH - height) / 2;
+            } else {
+                width = dstH * srcRatio;
+                height = dstH;
+                x = (dstW - width) / 2;
+                y = 0;
+            }
+            return { x, y, width, height };
+        }
+
+        function sampleDarkness(imageData, targetArray) {
+            const data = imageData.data;
+            const imgW = imageData.width;
+            const imgH = imageData.height;
+
+            for (let i = 0; i < gridPoints.length; i++) {
+                const pt = gridPoints[i];
+                if (pt.x >= 0 && pt.x < imgW && pt.y >= 0 && pt.y < imgH) {
+                    const idx = (Math.floor(pt.y) * imgW + Math.floor(pt.x)) * 4;
+                    const r = data[idx];
+                    const g = data[idx + 1];
+                    const b = data[idx + 2];
+                    const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
+                    targetArray[i] = 1 - (luminance / 255);
+                } else {
+                    targetArray[i] = 0; 
+                }
+            }
+        }
+
+        function precalculateAll() {
+            if (!imagesLoaded[0]) return;
+
+            const cellSize = parseInt(densitySlider.value);
+            const W = canvas.width;
+            const H = canvas.height;
+
+            gridPoints = [];
+            for (let y = 0; y < H; y += cellSize) {
+                for (let x = 0; x < W; x += cellSize) {
+                    gridPoints.push({
+                        x: x + cellSize / 2,
+                        y: y + cellSize / 2,
+                        rand: Math.random() 
+                    });
+                }
+            }
+
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = W;
+            tempCanvas.height = H;
+            const tempCtx = tempCanvas.getContext('2d');
+
+            darkness1 = new Array(gridPoints.length).fill(0);
+            tempCtx.fillStyle = '#ffffff'; 
+            tempCtx.fillRect(0, 0, W, H);
+            
+            // Draw img1 scaled to fit canvas size
+            tempCtx.drawImage(img1, 0, 0, img1.width, img1.height, 0, 0, W, H); 
+            sampleDarkness(tempCtx.getImageData(0, 0, W, H), darkness1);
+
+            darkness2 = new Array(gridPoints.length).fill(0);
+            if (imagesLoaded[1]) {
+                tempCtx.fillStyle = '#ffffff'; 
+                tempCtx.fillRect(0, 0, W, H);
+                const fit = getFitParams(img2.width, img2.height, W, H);
+                tempCtx.drawImage(img2, fit.x, fit.y, fit.width, fit.height);
+                sampleDarkness(tempCtx.getImageData(0, 0, W, H), darkness2);
+            }
+
+            if (!isAnimating) drawStaticFrame();
+        }
+
+        function drawStaticFrame() {
+            if (!imagesLoaded[0]) return;
+            drawTransitionFrame(0); 
+        }
+
+        function drawTransitionFrame(progress) {
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const cellSize = parseInt(densitySlider.value);
+            const shapeType = shapeSelect.value;
+            const transitionType = transitionSelect.value;
+            const maxShapeSize = cellSize * 1.2; 
+
+            ctx.fillStyle = '#111111'; // Noir d'encre pour la trame
+
+            for (let i = 0; i < gridPoints.length; i++) {
+                const pt = gridPoints[i];
+                const d1 = darkness1[i];
+                const d2 = darkness2[i];
+                let currentDarkness = 0;
+
+                if (transitionType === 'wipe') {
+                    currentDarkness = (pt.x < progress * canvas.width) ? d2 : d1;
+                } else if (transitionType === 'morph') {
+                    currentDarkness = d1 * (1 - progress) + d2 * progress;
+                } else if (transitionType === 'dissolve') {
+                    const startWindow = pt.rand * 0.7; 
+                    let localP = (progress - startWindow) / 0.3; 
+                    localP = Math.max(0, Math.min(1, localP)); 
+
+                    if (localP < 0.5) {
+                        const shrink = 1 - (localP * 2);
+                        currentDarkness = d1 * shrink;
+                    } else {
+                        const grow = (localP - 0.5) * 2;
+                        currentDarkness = d2 * grow;
+                    }
+                }
+
+                if (currentDarkness < 0.02) continue; 
+
+                const size = maxShapeSize * currentDarkness;
+                const radius = size * 0.25; 
+
+                ctx.save();
+                ctx.translate(pt.x, pt.y);
+                if (shapeType === 'diamond') ctx.rotate(Math.PI / 4); 
+
+                ctx.beginPath();
+                ctx.roundRect(-size / 2, -size / 2, size, size, radius);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        function animationLoop(timestamp) {
+            if (!startTime) startTime = timestamp;
+            const elapsed = timestamp - startTime;
+            const speed = parseFloat(speedSlider.value);
+            const totalCycleTime = (baseCycleTimeMs * 2) / speed;
+            let linearP = (elapsed % totalCycleTime) / totalCycleTime; 
+            
+            let progress = (linearP < 0.5) ? linearP * 2 : 2 - (linearP * 2);
+
+            drawTransitionFrame(progress);
+            if (isAnimating) animationId = requestAnimationFrame(animationLoop);
+        }
+
+        function toggleAnimation() {
+            if (!imagesLoaded[0]) return;
+            isAnimating = !isAnimating;
+            if (isAnimating) {
+                startTime = 0; 
+                startBtnText.textContent = "Pause";
+                playIcon.setAttribute('data-lucide', 'pause');
+                lucide.createIcons();
+                animationId = requestAnimationFrame(animationLoop);
+            } else {
+                startBtnText.textContent = "Lecture";
+                playIcon.setAttribute('data-lucide', 'play');
+                lucide.createIcons();
+                cancelAnimationFrame(animationId);
+                drawStaticFrame();
+            }
+        }
+
+        function toggleRecording() {
+            if (!imagesLoaded[0]) return;
+            if (!isRecording) startRecording();
+            else stopRecording();
+        }
+
+        function startRecording() {
+            if (!isAnimating) toggleAnimation();
+            recordedChunks = [];
+            const stream = canvas.captureStream(30);
+            
+            let options = { mimeType: 'video/webm; codecs=vp9' };
+            if (!MediaRecorder.isTypeSupported(options.mimeType)) options = { mimeType: 'video/webm' };
+
+            try { mediaRecorder = new MediaRecorder(stream, options); } 
+            catch (e) { alert("Erreur: Navigateur non compatible pour l'export webm"); return; }
+
+            mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) recordedChunks.push(e.data); };
+            mediaRecorder.onstop = saveVideo;
+            mediaRecorder.start();
+            
+            isRecording = true;
+            recordBtnText.textContent = "Arrêter";
+            // Style de destruction (Apple Red) pour l'enregistrement
+            recordBtn.className = "flex-1 flex items-center justify-center py-3 px-4 bg-[#FF3B30] text-white rounded-xl font-semibold text-[15px] transition-all hover:bg-[#e6352b] active:scale-[0.98]";
+            recordIcon.setAttribute('data-lucide', 'square');
+            recordIcon.classList.add('fill-current');
+            lucide.createIcons();
+        }
+
+        function stopRecording() {
+            if(mediaRecorder && mediaRecorder.state !== "inactive") {
+                mediaRecorder.stop();
+            }
+            isRecording = false;
+            recordBtnText.textContent = "Exporter";
+            // Retour au style normal (Apple Blue)
+            recordBtn.className = "flex-1 flex items-center justify-center py-3 px-4 bg-[#007AFF] text-white rounded-xl font-semibold text-[15px] transition-all hover:bg-[#006ee6] active:scale-[0.98]";
+            recordIcon.setAttribute('data-lucide', 'circle');
+            recordIcon.classList.remove('fill-current');
+            lucide.createIcons();
+        }
+
+        function saveVideo() {
+            const blob = new Blob(recordedChunks, { type: 'video/webm' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = `trame_studio_${Date.now()}.webm`;
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 100);
+        }
+    </script>
+</body>
+</html>
