@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Générateur Duotone & Tritone</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* Typography Apple HIG */
+    body, button, input { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important; }
+    
+    /* Apple-like soft shadows and states */
+    .ios-shadow { box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02); }
+    .color-selected { transform: scale(1.15); box-shadow: 0 0 0 2px white, 0 0 0 4px #007AFF; }
+    .segment-btn { transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1); }
+    
+    /* Canvas : object-contain et max-size permettent au canvas d'épouser la forme de l'image */
+    canvas { 
+      touch-action: none; 
+      display: block; 
+    }
+    
+    /* Checkerboard background appliqué uniquement sous l'image */
+    .bg-checker {
+      background-image: linear-gradient(45deg, #e5e5ea 25%, transparent 25%), 
+                        linear-gradient(-45deg, #e5e5ea 25%, transparent 25%), 
+                        linear-gradient(45deg, transparent 75%, #e5e5ea 75%), 
+                        linear-gradient(-45deg, transparent 75%, #e5e5ea 75%);
+      background-size: 20px 20px;
+      background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+    }
+  </style>
+</head>
+<body class="h-screen w-screen overflow-hidden bg-[#F5F5F7] text-[#1D1D1F] antialiased selection:bg-[#007AFF] selection:text-white p-4 md:p-6 flex items-center justify-center">
+
+  <div class="w-full h-full max-w-[1400px] flex flex-col lg:flex-row gap-6">
+
+    <div class="w-full lg:w-[380px] shrink-0 bg-white p-6 rounded-[24px] ios-shadow flex flex-col gap-6 overflow-y-auto h-full">
+      
+      <div>
+        <label class="flex items-center justify-center w-full py-3 px-4 bg-[#F2F2F7] text-[#007AFF] font-medium text-[16px] rounded-xl cursor-pointer hover:bg-[#E5E5EA] active:scale-[0.98] transition-all">
+          <i data-lucide="image-plus" class="w-5 h-5 mr-2"></i>
+          <span>Choisir une image...</span>
+          <input type="file" id="file-input" accept="image/*" class="sr-only" />
+        </label>
+      </div>
+
+      <div class="h-px w-full bg-gray-100"></div>
+
+      <div>
+        <h3 class="text-[13px] font-semibold text-[#8E8E93] uppercase tracking-wider mb-3">1. Mode de rendu</h3>
+        <div class="flex bg-[#F2F2F7] p-1 rounded-xl">
+          <button id="btn-mode-duotone" class="segment-btn flex-1 py-1.5 text-[14px] bg-white shadow-sm text-black font-semibold rounded-lg">
+            Duotone
+          </button>
+          <button id="btn-mode-tritone" class="segment-btn flex-1 py-1.5 text-[14px] text-[#8E8E93] hover:text-black font-medium rounded-lg">
+            Tritone
+          </button>
+        </div>
+      </div>
+
+      <div class="flex-1">
+        <h3 class="text-[13px] font-semibold text-[#8E8E93] uppercase tracking-wider mb-4">2. Palette de couleurs</h3>
+        
+        <div class="flex flex-col gap-5">
+          <div>
+            <p class="text-[14px] font-medium mb-2 text-[#1D1D1F]">Ombres (Tons foncés)</p>
+            <div id="swatches-c1" class="flex flex-wrap gap-3 pt-1 px-1"></div>
+          </div>
+
+          <div id="container-midtones" class="hidden">
+            <p class="text-[14px] font-medium mb-2 text-[#1D1D1F]">Tons moyens</p>
+            <div id="swatches-c2" class="flex flex-wrap gap-3 pt-1 px-1"></div>
+          </div>
+
+          <div>
+            <p class="text-[14px] font-medium mb-2 text-[#1D1D1F]">Lumières (Tons clairs)</p>
+            <div id="swatches-c3" class="flex flex-wrap gap-3 pt-1 px-1"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="flex-1 min-w-0 bg-white p-6 rounded-[24px] ios-shadow flex flex-col h-full gap-4">
+      
+      <div class="flex items-center justify-between shrink-0">
+        <h2 class="text-lg font-semibold tracking-tight text-black">Aperçu</h2>
+      </div>
+
+      <div id="canvas-wrapper" class="flex-1 min-h-0 w-full flex items-center justify-center relative">
+        
+        <div id="empty-state" class="absolute inset-0 flex flex-col items-center justify-center text-[#8E8E93] border-2 border-dashed border-[#E5E5EA] rounded-[20px] bg-[#F9F9FB]">
+          <i data-lucide="image" class="w-8 h-8 opacity-40 mb-2"></i>
+          <span class="font-medium text-[15px]">Aucune image sélectionnée</span>
+        </div>
+
+        <canvas id="main-canvas" class="hidden relative z-10 max-w-full max-h-full rounded-[16px] ios-shadow border border-black/5 bg-checker object-contain"></canvas>
+      </div>
+
+      <div class="shrink-0 mt-2">
+        <button id="btn-dl" disabled class="w-full flex items-center justify-center py-3.5 px-4 rounded-xl font-semibold text-[17px] transition-all bg-[#F2F2F7] text-[#C7C7CC] cursor-not-allowed">
+          <i data-lucide="download" class="w-5 h-5 mr-2"></i>
+          <span>Télécharger le résultat</span>
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    const PALETTE = ['#000000', '#6D2020', '#D72D0F', '#F250DF', '#43C7F4', '#FFFFFF'];
+
+    const state = {
+      mode: 'duotone', 
+      c1: '#000000',   
+      c2: '#D72D0F',   
+      c3: '#F250DF',   
+      originalImage: null
+    };
+
+    const fileInput = document.getElementById('file-input');
+    const canvas = document.getElementById('main-canvas');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    const emptyState = document.getElementById('empty-state');
+    const btnDl = document.getElementById('btn-dl');
+    const containerMidtones = document.getElementById('container-midtones');
+
+    function init() {
+      lucide.createIcons();
+      setupEventListeners();
+      renderAllSwatches();
+    }
+
+    function updateModeUI() {
+      const btnDuo = document.getElementById('btn-mode-duotone');
+      const btnTri = document.getElementById('btn-mode-tritone');
+      const activeFmt = ["bg-white", "shadow-sm", "text-black", "font-semibold"];
+      const inactiveFmt = ["text-[#8E8E93]", "hover:text-black", "font-medium"];
+
+      if (state.mode === 'duotone') {
+        btnDuo.classList.add(...activeFmt); btnDuo.classList.remove(...inactiveFmt);
+        btnTri.classList.add(...inactiveFmt); btnTri.classList.remove(...activeFmt);
+        containerMidtones.classList.add('hidden');
+      } else {
+        btnTri.classList.add(...activeFmt); btnTri.classList.remove(...inactiveFmt);
+        btnDuo.classList.add(...inactiveFmt); btnDuo.classList.remove(...activeFmt);
+        containerMidtones.classList.remove('hidden');
+      }
+    }
+
+    function renderSwatches(containerId, stateKey) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+      
+      PALETTE.forEach(color => {
+        const btn = document.createElement('button');
+        btn.className = `w-8 h-8 rounded-full transition-all focus:outline-none border border-black/10 hover:scale-105 shadow-sm`;
+        btn.style.backgroundColor = color;
+        
+        if(state[stateKey] === color) {
+          btn.classList.add('color-selected');
+        }
+        
+        btn.onclick = () => {
+          state[stateKey] = color;
+          renderAllSwatches();
+          processImage();
+        };
+        
+        container.appendChild(btn);
+      });
+    }
+
+    function renderAllSwatches() {
+      renderSwatches('swatches-c1', 'c1');
+      renderSwatches('swatches-c2', 'c2');
+      renderSwatches('swatches-c3', 'c3');
+    }
+
+    function setupEventListeners() {
+      document.getElementById('btn-mode-duotone').onclick = () => { 
+        state.mode = 'duotone'; updateModeUI(); processImage(); 
+      };
+      document.getElementById('btn-mode-tritone').onclick = () => { 
+        state.mode = 'tritone'; updateModeUI(); processImage(); 
+      };
+
+      fileInput.onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          const img = new Image();
+          img.onload = () => {
+            state.originalImage = img;
+            
+            // Le canvas prend la taille réelle de l'image (pour un export propre)
+            canvas.width = img.width;
+            canvas.height = img.height;
+            
+            // Mise à jour de l'UI
+            canvas.classList.remove('hidden');
+            emptyState.classList.add('hidden');
+            
+            btnDl.disabled = false;
+            btnDl.classList.remove('bg-[#F2F2F7]', 'text-[#C7C7CC]', 'cursor-not-allowed');
+            btnDl.classList.add('bg-[#007AFF]', 'text-white', 'shadow-sm', 'hover:bg-[#006ee6]', 'active:scale-[0.98]');
+            
+            processImage();
+          };
+          img.src = evt.target.result;
+        };
+        reader.readAsDataURL(file);
+      };
+
+      btnDl.onclick = () => {
+        if (!state.originalImage) return;
+        const link = document.createElement('a');
+        link.download = `rendu-${state.mode}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      };
+    }
+
+    function hexToRgb(hex) {
+      const bigint = parseInt(hex.slice(1), 16);
+      return { r: (bigint >> 16) & 255, g: (bigint >> 8) & 255, b: bigint & 255 };
+    }
+
+    function lerp(start, end, t) {
+      return Math.round(start + (end - start) * t);
+    }
+
+    function processImage() {
+      if (!state.originalImage) return;
+
+      ctx.drawImage(state.originalImage, 0, 0);
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const data = imageData.data;
+
+      const c1 = hexToRgb(state.c1);
+      const c2 = hexToRgb(state.c2);
+      const c3 = hexToRgb(state.c3);
+
+      for (let i = 0; i < data.length; i += 4) {
+        const r = data[i], g = data[i+1], b = data[i+2];
+        const gray = (r * 0.299 + g * 0.587 + b * 0.114);
+
+        if (state.mode === 'duotone') {
+          const t = gray / 255;
+          data[i]   = lerp(c1.r, c3.r, t);
+          data[i+1] = lerp(c1.g, c3.g, t);
+          data[i+2] = lerp(c1.b, c3.b, t);
+        } 
+        else if (state.mode === 'tritone') {
+          if (gray < 128) {
+            const t = gray / 127;
+            data[i]   = lerp(c1.r, c2.r, t);
+            data[i+1] = lerp(c1.g, c2.g, t);
+            data[i+2] = lerp(c1.b, c2.b, t);
+          } else {
+            const t = (gray - 128) / 127;
+            data[i]   = lerp(c2.r, c3.r, t);
+            data[i+1] = lerp(c2.g, c3.g, t);
+            data[i+2] = lerp(c2.b, c3.b, t);
+          }
+        }
+      }
+      ctx.putImageData(imageData, 0, 0);
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
