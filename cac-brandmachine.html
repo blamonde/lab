@@ -1,22 +1,134 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CAC — Laboratoire 0.6</title>
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>CAC — Social Generator</title>
 <style>
 @font-face{font-family:Echo;src:url('assets/CAC livraison/Fonts/Echo/EchoV8-Medium.otf')}@font-face{font-family:Basel;src:url('assets/CAC livraison/Fonts/Basel Classic/BaselClassic-Bold.ttf');font-weight:700}
 :root{font-family:Arial,sans-serif;color:#1b1b1b;background:#f5f5f2}*{box-sizing:border-box}body{margin:0}header{height:74px;border-bottom:1px solid #ddd;display:flex;align-items:center;justify-content:space-between;padding:0 32px;background:#fafaf8}header b{font-size:19px;letter-spacing:-.5px}header span{font-size:11px;letter-spacing:.12em;color:#777}main{display:grid;grid-template-columns:365px 1fr;min-height:calc(100vh - 74px)}aside{background:#fafaf8;border-right:1px solid #ddd;padding:25px;display:flex;flex-direction:column;gap:19px;max-height:calc(100vh - 74px);overflow:auto}section{background:#e9e9e6;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;gap:14px}canvas{display:block;touch-action:none;max-width:min(100%,610px);max-height:76vh;width:auto;height:auto;box-shadow:0 12px 40px #00000012}label{display:block;font-size:11px;font-weight:700;letter-spacing:.035em;margin-bottom:8px}input,select,textarea{width:100%;font:13px Arial;border:1px solid #d7d7d3;background:#fff;padding:10px;border-radius:6px}textarea{resize:vertical;min-height:90px;line-height:1.4}.pair{display:flex;gap:7px}.pair button{flex:1}.pair button,.action{border:1px solid #d6d6d2;border-radius:6px;padding:11px 8px;background:white;cursor:pointer;font:12px Arial}.template-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}.template-grid button{border:1px solid #d6d6d2;border-radius:6px;padding:11px 8px;background:white;cursor:pointer;font:12px Arial;text-align:left}.template-grid button.on{background:#171717;color:#fff;border-color:#171717}.pair button.on{background:#171717;color:#fff;border-color:#171717}.group{border-top:1px solid #e1e1dd;padding-top:18px}.muted{font-size:11px;color:#777;line-height:1.55;margin:7px 0 0}.swatches{display:flex;flex-wrap:wrap;gap:8px}.swatch{width:29px;height:29px;border:1px solid #0002;border-radius:50%;cursor:pointer;padding:0}.swatch.on{outline:2px solid #111;outline-offset:3px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid2 input{width:100%}.action{background:#171717;color:#fff;padding:14px;font-weight:bold}.warn{font-size:12px;line-height:1.5;color:#a34320;min-height:18px}.caption{font-size:11px;color:#777;text-align:center}.photo-active{cursor:grab}.photo-dragging{cursor:grabbing}.preview-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center}.preview-tools button{border:1px solid #ccc;background:#fafaf8;border-radius:6px;padding:8px 12px;cursor:pointer;font-size:12px}.preview-tools button:disabled{opacity:.35;cursor:default}input[type=range]{padding:0;accent-color:#111}input[type=checkbox]{width:auto;vertical-align:middle;margin-right:6px}@media(max-width:820px){main{grid-template-columns:1fr}aside{max-height:none;border-right:0;border-bottom:1px solid #ddd}section{padding:20px}header{padding:0 20px}}
-[hidden]{display:none!important}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid #196FF0;outline-offset:2px}@media(max-width:520px){header{height:auto;min-height:70px;gap:8px;padding:16px}header span{font-size:9px}aside{padding:18px}section{padding:14px}.template-grid{grid-template-columns:1fr 1fr}.preview-tools{max-width:100%}}</style></head><body>
-<header><b>CAC <span style="font-size:18px;letter-spacing:0;color:#777">/ Social Generator</span></b><span>PRINCIPAL LAB · 0.6 · 7 COMPOSITIONS</span></header>
+[hidden]{display:none!important}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid #196FF0;outline-offset:2px}@media(max-width:520px){header{height:auto;min-height:70px;gap:8px;padding:16px}header span{font-size:9px}aside{padding:18px}section{padding:14px}.template-grid{grid-template-columns:1fr 1fr}.preview-tools{max-width:100%}}
+:root{color:#1b1b1b;background:#f6f6f4}
+header{height:68px;background:#fff;border-color:#e9e9e7;padding:0 28px}
+.brand{display:flex;align-items:baseline;gap:11px}.brand strong{font-size:19px;letter-spacing:-.7px}
+.brand span{font-size:14px;letter-spacing:-.3px;color:#777}
+.header-note{font-size:10px;letter-spacing:.11em;color:#a0a09d}
+main{grid-template-columns:minmax(320px,350px) minmax(0,1fr);min-height:calc(100vh - 68px)}
+aside{background:#fff;border-color:#e9e9e7;gap:0;padding:25px 24px;max-height:calc(100vh - 68px)}
+aside>div{margin-bottom:23px}
+section{background:#f2f2f0;gap:12px}
+.step-heading{font-size:12px;font-weight:700;letter-spacing:-.05px;text-transform:none;margin:0 0 14px;color:#161616}
+.content-step{border-top:1px solid #ececea;padding-top:23px;margin-top:0;margin-bottom:0}
+.template-grid{gap:7px}
+.template-grid button{padding:13px 11px;border-radius:9px;min-height:48px;font-size:12px;line-height:1.3;border-color:#e8e8e6;transition:background .15s,border-color .15s}
+.template-grid button:hover:not(.on){background:#f5f5f3;border-color:#bdbdb9}
+.template-grid button.on{background:#191919;border-color:#191919;color:#fff}
+.format-block{margin-top:-4px;margin-bottom:23px!important}
+.format-block label{font-size:12px;font-weight:600;letter-spacing:0;text-transform:none;margin-bottom:9px}
+.pair button{border-radius:8px;padding:11px}
+.group{border-top:0;padding-top:0;margin-bottom:22px}
+label{font-size:12px;font-weight:600;letter-spacing:0;margin-bottom:9px}
+textarea,input:not([type=range]):not([type=file]){font:13px Arial;border-color:#e2e2df;border-radius:8px;padding:12px}
+textarea{min-height:77px}
+/* Familiar macOS-style file picker: one clear action, no native browser file field. */
+.photo-picker{position:relative}
+.photo-picker input[type=file]{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.photo-picker-button{width:100%;display:flex;align-items:center;gap:13px;text-align:left;padding:14px;
+background:#f7f7f6;border:1px solid #e5e5e2;border-radius:11px;color:#242424;cursor:pointer;
+transition:background .15s,border-color .15s}
+.photo-picker-button:hover{background:#f0f0ee;border-color:#d0d0cd}
+.photo-picker-button:focus-visible,.photo-picker:focus-within .photo-picker-button{outline:2px solid #196FF0;outline-offset:2px}
+.photo-picker-icon{width:43px;height:43px;flex:none;display:grid;place-items:center;background:#fff;
+border:1px solid #e7e7e4;border-radius:9px;color:#696965}
+.photo-picker-copy{min-width:0;flex:1;display:flex;flex-direction:column;gap:4px}
+.photo-picker-copy strong{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.photo-picker-copy small{font-size:11px;color:#888883;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.photo-picker-plus{display:grid;place-items:center;width:25px;height:25px;flex:none;border-radius:50%;
+background:#fff;border:1px solid #e2e2df;font-size:20px;line-height:1;color:#4c4c49}
+.photo-picker.is-dragging .photo-picker-button{background:#eaf1ff;border-color:#196FF0}
+.photo-picker.has-photo .photo-picker-icon{color:#196FF0}
+.photo-picker.has-photo .photo-picker-plus{font-size:0}
+.photo-picker.has-photo .photo-picker-plus:before{content:'↻';font-size:17px}
+
+.advanced{margin-top:13px;border:1px solid #ebebe8;border-radius:9px;padding:12px}
+.advanced summary{font-size:12px;cursor:pointer;color:#52524f;list-style:none}
+.advanced summary:after{content:'+';float:right;font-size:16px}
+.advanced[open] summary:after{content:'−'}
+.advanced .grid2{margin-top:16px!important}
+.advanced label{font-size:11px;color:#6a6a66}
+.swatches{gap:10px;padding:5px 2px}
+.swatch{width:27px;height:27px}
+.export-block{margin-top:auto!important;border-top:1px solid #ececea;padding-top:22px;margin-bottom:0!important;display:flex;flex-direction:column;gap:12px}
+.export-block .step-heading{margin:0}
+.action{border-radius:9px;font-size:13px;font-weight:600;padding:16px;background:#191919}
+.action:hover{background:#333}
+.reset-link{border:0!important;background:transparent!important;color:#8c8c88!important;padding:5px!important;font-size:12px!important;cursor:pointer}
+.reset-link:hover{color:#111!important}
+.warn{min-height:0;font-size:12px}
+.warn:empty{display:none}
+.save-status{font-size:11px;color:#777;line-height:1.4;margin-top:8px}
+#previewHint{font-size:11px}
+.preview-tools{gap:12px}
+.preview-tools button{border-color:#e2e2de;background:#fff;border-radius:50%;height:31px;width:31px;padding:0;font-size:17px}
+canvas{box-shadow:none;max-width:none;max-height:none;width:100%;height:100%;object-fit:fill}
+.canvas-shell{position:relative;width:min(100%,610px,calc(76vh * .75));max-width:100%;flex:none;
+  box-shadow:0 14px 42px #0000000b;background:#dededb;isolation:isolate}
+.canvas-shell:has(canvas[height="1080"]){width:min(100%,610px,76vh)}
+.canvas-empty{position:absolute;inset:0;z-index:2;border:0;background:#ffffff05;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;
+  cursor:pointer;color:#252525;font-family:Arial,sans-serif}
+.canvas-empty:before{content:'';position:absolute;inset:18px;border:1.5px dashed #888a88;
+  pointer-events:none}
+.canvas-empty:hover,.canvas-shell.is-dragging .canvas-empty{background:#ffffff21}
+.canvas-empty:focus-visible{outline:3px solid #196FF0;outline-offset:3px}
+.empty-icon{width:55px;height:55px;display:grid;place-items:center;border-radius:50%;
+  background:#fff;box-shadow:0 1px 6px #00000013;margin-bottom:6px}
+.empty-title{font-size:16px;font-weight:600;letter-spacing:-.3px}
+.empty-subtitle{font-size:12px;color:#666}
+.canvas-replace{position:absolute;right:14px;top:14px;z-index:3;border:1px solid #ffffffa8;
+  border-radius:8px;padding:10px 13px;background:#fffffff0;box-shadow:0 2px 9px #00000014;
+  font:12px Arial;color:#222;cursor:pointer;opacity:0;transform:translateY(-3px);
+  transition:opacity .16s,transform .16s}
+.canvas-shell.has-photo:hover .canvas-replace,.canvas-replace:focus-visible{
+  opacity:1;transform:translateY(0)}
+.canvas-shell.is-dragging{outline:3px solid #196FF0;outline-offset:3px}
+@media(hover:none){.canvas-replace{opacity:1;transform:none}}
+@media(max-width:520px){.canvas-shell{width:min(100%,calc(66vh * .75))}
+.canvas-shell:has(canvas[height="1080"]){width:min(100%,66vh)}
+.empty-title{font-size:14px}.empty-subtitle{font-size:11px}}
+@media(max-width:820px){main{grid-template-columns:1fr}aside{max-height:none;border-bottom:1px solid #e9e9e7}section{min-height:65vh}}
+@media(max-width:520px){header{padding:0 18px}.header-note{display:none}aside{padding:22px 18px}}
+</style></head><body>
+<header><div class="brand"><strong>CAC</strong><span>Social Generator</span></div><span class="header-note">CONSEIL DES ARTS DU CANADA</span></header>
 <main><aside>
-<div><label>COMPOSITION FIGMA</label><div id="templateGrid" class="template-grid"><button data-template="photo">01 · Photo + titre</button><button data-template="type" class="on">02 · Typographie</button><button data-template="free">03 · Photo libre</button><button data-template="portrait">04 · Portrait</button><button data-template="boxed">05 · Titre en aplats</button><button data-template="name">06 · Nom en haut</button><button data-template="bottom">07 · Étiquette en bas</button></div><p class="muted">Sept familles du fichier Figma, chacune en portrait et carré. La composition 03 est aplatie dans la source : elle est proposée comme cadre photo libre.</p></div>
-<div><label>FORMAT</label><div class="pair"><button data-format="portrait" class="on">1080 × 1440</button><button data-format="square">1080 × 1080</button></div></div>
-<div id="typeControls" class="group"><label>TITRE PRINCIPAL · BASEL CLASSIC BOLD</label><textarea id="mainText">Prizes
-announcement</textarea><label style="margin-top:12px">TEXTE SECONDAIRE · BASEL CLASSIC BOLD</label><textarea id="secondaryText">Musical Instrument Bank
-competition winners</textarea><p class="muted">Les retours manuels restent prioritaires. Les lignes longues sont réparties automatiquement et le corps est réduit uniquement si nécessaire.</p></div>
-<div id="photoControls" class="group" hidden><label>PHOTOGRAPHIE</label><input type="file" id="upload" accept="image/*"><p class="muted">Glisse la photographie dans l’aperçu pour la déplacer. Utilise la molette pour zoomer, ou les réglages ci-dessous. Importer une photo autorisée.</p><div class="grid2" style="margin-top:13px"><div><label>ZOOM <span id="zoomValue">100 %</span></label><input type="range" id="zoom" min="1" max="3" step=".01" value="1"></div><div><label>HORIZONTAL</label><input type="range" id="panx" min="0" max="100" value="50"></div></div><label style="margin-top:12px">VERTICAL</label><input type="range" id="pany" min="0" max="100" value="50"><div style="margin-top:12px" class="pair"><button type="button" id="resetCrop">Réinitialiser le cadrage</button><button type="button" id="centerCrop">Centrer</button></div><div id="photoTitleControls"><label style="margin-top:13px">TITRE · BASEL CLASSIC BOLD</label><textarea id="photoTitle">Prix
+<div><label class="step-heading">01 / Choisir une composition</label><div class="template-grid" id="templateGrid"><button data-template="photo" title="Composition 01">Photo et titre</button><button class="on" data-template="type" title="Composition 02">Typographie</button><button data-template="free" title="Composition 03">Photo libre</button><button data-template="portrait" title="Composition 04">Portrait</button><button data-template="boxed" title="Composition 05">Titre en aplats</button><button data-template="name" title="Composition 06">Nom en haut</button><button data-template="bottom" title="Composition 07">Étiquette en bas</button></div></div><div class="format-block"><label>Format</label><div class="pair"><button class="on" data-format="portrait">Portrait</button><button data-format="square">Carré</button></div></div>
+
+<div class="step-heading content-step">02 / Personnaliser</div><div class="group" id="typeControls"><label>Titre principal</label><textarea id="mainText">Prizes
+announcement</textarea><label style="margin-top:12px">Texte secondaire</label><textarea id="secondaryText">Musical Instrument Bank
+competition winners</textarea></div>
+<div class="group" hidden="" id="photoControls"><label>Photographie</label>
+<div class="photo-picker" id="photoPicker">
+  <input accept="image/*" id="upload" type="file" aria-label="Choisir une photographie"/>
+  <button class="photo-picker-button" id="photoPickerButton" type="button">
+    <span class="photo-picker-icon" aria-hidden="true"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="8.5" cy="9" r="1.5"/><path d="m4 17 5-5 3.5 3.5 2.5-2.5 5 5"/></svg></span>
+    <span class="photo-picker-copy"><strong id="photoPickerTitle">Choisir une photo</strong><small id="photoPickerSubtitle">JPEG, PNG ou WebP</small></span>
+    <span class="photo-picker-plus" aria-hidden="true">+</span>
+  </button>
+</div><details class="advanced"><summary>Ajuster le cadrage</summary><div class="grid2" style="margin-top:13px"><div><label>Zoom <span id="zoomValue">100 %</span></label><input id="zoom" max="3" min="1" step=".01" type="range" value="1"/></div><div><label>Horizontal</label><input id="panx" max="100" min="0" type="range" value="50"/></div></div><label style="margin-top:12px">Vertical</label><input id="pany" max="100" min="0" type="range" value="50"/><div class="pair" style="margin-top:12px"><button id="resetCrop" type="button">Réinitialiser le cadrage</button><button id="centerCrop" type="button">Centrer</button></div></details><div id="photoTitleControls"><label style="margin-top:13px">Titre</label><textarea id="photoTitle">Prix
 John-Hobday
 2024</textarea></div></div>
-<div class="group" id="colorControls"><label id="colorHeading">COULEUR DE FOND / ÉTIQUETTE</label><div id="swatches" class="swatches"></div><p id="colorHelp" class="muted"></p></div>
-<div class="group" id="labelControls"><label id="labelHeading">ÉTIQUETTE · ECHO MEDIUM</label><input id="labelText" value="Discover"></div>
-<div class="group"><div class="pair"><button type="button" id="resetComposition">Réinitialiser la composition</button></div><p class="muted" id="saveStatus" role="status">Les modifications sont enregistrées automatiquement dans ce navigateur.</p></div><div class="warn" id="warning" role="status" aria-live="polite"></div><button class="action" id="export">Exporter le PNG</button><p class="muted">Conseil : les images importées ne sont pas conservées après la fermeture de la page. Les textes, couleurs et réglages le sont.</p><p class="muted">Les fontes sont chargées localement à partir des assets de la v0.1. Les photographies Figma ne sont pas incluses : importez vos images autorisées.</p>
-</aside><section><canvas id="canvas" width="1080" height="1440"></canvas><div class="preview-tools"><button type="button" id="zoomOut" aria-label="Dézoomer">−</button><span id="previewHint" class="caption">Sélectionner une composition photo pour recadrer</span><button type="button" id="zoomIn" aria-label="Zoomer">+</button></div><div class="caption" id="caption">Aperçu · 1080 × 1440 · Figma 02</div></section></main>
+<div class="group" id="colorControls"><label id="colorHeading">Couleur</label><div class="swatches" id="swatches"></div></div>
+<div class="group" id="labelControls"><label id="labelHeading">Étiquette</label><input id="labelText" value="Discover"/></div>
+
+<div class="export-block"><div class="step-heading">03 / Exporter</div><div aria-live="polite" class="warn" id="warning" role="status"></div><button class="action" id="export">Télécharger le PNG</button><button class="reset-link" id="resetComposition" type="button">Recommencer</button></div></aside><section>
+<div class="canvas-shell" id="canvasShell">
+  <canvas height="1440" id="canvas" width="1080"></canvas>
+  <button class="canvas-empty" id="canvasEmpty" type="button" hidden aria-label="Importer une photographie">
+    <span class="empty-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="8.5" cy="9" r="1.5"/><path d="m4 17 5-5 3.5 3.5 2.5-2.5 5 5"/></svg>
+    </span>
+    <span class="empty-title">Déposer une photo</span>
+    <span class="empty-subtitle">ou cliquer pour parcourir</span>
+  </button>
+  <button class="canvas-replace" id="canvasReplace" type="button" hidden>Remplacer la photo</button>
+</div>
+<div class="preview-tools"><button aria-label="Dézoomer" id="zoomOut" type="button">−</button><span class="caption" id="previewHint">Glisser pour recadrer</span><button aria-label="Zoomer" id="zoomIn" type="button">+</button></div><div class="caption" id="caption">Portrait · 1080 × 1440</div></section></main>
 <script>
 const $=id=>document.getElementById(id),canvas=$('canvas'),ctx=canvas.getContext('2d');
 const STORAGE_KEY='principal-cac-lab-v06';
@@ -69,7 +181,7 @@ function zoomAt(nextZoom,px=.5,py=.5){
  const newW=old.w*ratio,newH=old.h*ratio;
  setCrop(zoom,newW>w?(100*-newX/(newW-w)):50,newH>h?(100*-newY/(newH-h)):50);
 }
-function drawPhoto(w,h,errors){let img=state.image;if(img){ctx.save();ctx.beginPath();ctx.rect(0,0,w,h);ctx.clip();let r=imageCover(img,w,h);ctx.drawImage(img,r.x,r.y,r.w,r.h);ctx.restore()}else{ctx.fillStyle='#c7c7c7';ctx.fillRect(0,0,w,h);ctx.fillStyle='#555';ctx.font='36px Arial';ctx.fillText('Importer une photographie',50,h/2);errors.push('Photographie manquante : importer une image pour exporter.')}}
+function drawPhoto(w,h,errors){let img=state.image;if(img){ctx.save();ctx.beginPath();ctx.rect(0,0,w,h);ctx.clip();let r=imageCover(img,w,h);ctx.drawImage(img,r.x,r.y,r.w,r.h);ctx.restore()}else{ctx.fillStyle='#c7c7c7';ctx.fillRect(0,0,w,h);errors.push('Photographie manquante : importer une image pour exporter.')}}
 function drawLabel(value,x,y,color,maxWidth=980){if(!value.trim())return [];let ink=bestInk(color),size=50;ctx.font=`${size}px Echo`;while(ctx.measureText(value).width>maxWidth-50&&size>17){size-=1;ctx.font=`${size}px Echo`}let width=Math.min(maxWidth,ctx.measureText(value).width+50),height=87.1;ctx.fillStyle=color;ctx.fillRect(x,y,width,height);ctx.fillStyle=ink;ctx.textBaseline='middle';ctx.save();ctx.beginPath();ctx.rect(x+25,y,width-50,height);ctx.clip();ctx.fillText(value,x+25,y+height/2);ctx.restore();return ctx.measureText(value).width>maxWidth-50?['Étiquette trop longue : raccourcir le texte.']:[]}
 function drawBoxedTitle(value,color,w,h){let rows=wrapText(value,150,w-100),size=150;while(size>46&&(rows.length*(size+60)+Math.max(0,rows.length-1)*10>h-80||rows.some(t=>{ctx.font=`700 ${size}px Basel`;return ctx.measureText(t).width>w-100}))){size-=2;rows=wrapText(value,size,w-100)}let y=40;for(const line of rows){ctx.font=`700 ${size}px Basel`;let bw=Math.min(w-80,ctx.measureText(line).width+50),bh=size+50;ctx.fillStyle=color;ctx.fillRect(40,y,bw,bh);ctx.fillStyle='#000';ctx.textBaseline='top';ctx.fillText(line,65,y+25);y+=bh+10}return y>h-20?['Titre trop long pour les aplats : raccourcir le contenu.']:[]}
 async function render(){let seq=++generation;await Promise.all([document.fonts.load('700 150px Basel'),document.fonts.load('50px Echo')]);await document.fonts.ready;let w=1080,h=state.format==='portrait'?1440:1080;canvas.width=w;canvas.height=h;let errors=[],isType=state.template==='type',bg=isType?state.color:'#ECEAE7';ctx.fillStyle=bg;ctx.fillRect(0,0,w,h);
@@ -109,13 +221,20 @@ if(isType){
  }
 
 }
-$('zoomValue').textContent=Math.round(+$('zoom').value*100)+' %';$('warning').textContent=errors.length?[...new Set(errors)].join(' · '):'Aucun débordement détecté pour les textes saisis.';$('warning').style.color=errors.length?'#a34320':'#497e56';$('caption').textContent=`Aperçu · ${w} × ${h} · Figma ${figmaNumbers[state.template]}`;return errors}
-function sync(){canvas.classList.toggle('photo-active',photoTemplates.includes(state.template)&&!!state.image);$('previewHint').textContent=photoTemplates.includes(state.template)?'Glisser pour recadrer · Molette pour zoomer':'Composition typographique';$('zoomOut').disabled=$('zoomIn').disabled=!photoTemplates.includes(state.template)||!state.image;document.querySelectorAll('[data-template]').forEach(b=>b.classList.toggle('on',b.dataset.template===state.template));document.querySelectorAll('[data-format]').forEach(b=>b.classList.toggle('on',b.dataset.format===state.format));$('typeControls').hidden=state.template!=='type';$('photoControls').hidden=!photoTemplates.includes(state.template);$('photoTitleControls').hidden=!['photo','portrait','boxed'].includes(state.template);$('labelControls').hidden=['free','boxed'].includes(state.template);$('labelHeading').textContent=['name','bottom'].includes(state.template)?'NOM / ÉTIQUETTE · ECHO MEDIUM':'ÉTIQUETTE · ECHO MEDIUM';$('colorControls').hidden=state.template==='free';$('colorHeading').textContent=state.template==='type'?'COULEUR DE FOND':'COULEUR DE L’ÉTIQUETTE / DES APLATS';$('colorHelp').textContent=state.template==='type'?'Le fond original du template 02 est Blanc fumée. Les autres fonds sont des variations de laboratoire.':state.template==='boxed'?'La couleur sélectionnée s’applique aux aplats typographiques.':state.template==='free'?'Composition 03 aplatie dans Figma : cadre photo libre, sans reconstruction des éléments intégrés.':'La couleur sélectionnée s’applique à l’étiquette. La photo couvre le fond, comme dans Figma.';document.querySelectorAll('.swatch').forEach(b=>b.classList.toggle('on',b.dataset.hex===(state.template==='type'?state.color:state.photoColor)));render();scheduleSave()}
+$('zoomValue').textContent=Math.round(+$('zoom').value*100)+' %';$('warning').textContent=errors.length?[...new Set(errors)].join(' · '):'';$('warning').style.color=errors.length?'#a34320':'#497e56';$('caption').textContent=`${state.format==='portrait'?'Portrait':'Carré'} · ${w} × ${h}`;return errors}
+function sync(){
+ const isPhoto=photoTemplates.includes(state.template),hasPhoto=!!state.image;
+ $('canvasEmpty').hidden=!isPhoto||hasPhoto;
+ $('canvasReplace').hidden=!isPhoto||!hasPhoto;
+ $('canvasShell').classList.toggle('is-empty',isPhoto&&!hasPhoto);
+ $('canvasShell').classList.toggle('has-photo',isPhoto&&hasPhoto);
+ $('canvasShell').style.aspectRatio=state.format==='portrait'?'3 / 4':'1 / 1';
+ canvas.classList.toggle('photo-active',photoTemplates.includes(state.template)&&!!state.image);$('previewHint').textContent=photoTemplates.includes(state.template)&&state.image?'Glisser pour recadrer':'Aperçu';$('zoomOut').disabled=$('zoomIn').disabled=!photoTemplates.includes(state.template)||!state.image;document.querySelectorAll('[data-template]').forEach(b=>b.classList.toggle('on',b.dataset.template===state.template));document.querySelectorAll('[data-format]').forEach(b=>b.classList.toggle('on',b.dataset.format===state.format));$('typeControls').hidden=state.template!=='type';$('photoControls').hidden=!photoTemplates.includes(state.template);$('photoTitleControls').hidden=!['photo','portrait','boxed'].includes(state.template);$('labelControls').hidden=['free','boxed'].includes(state.template);$('labelHeading').textContent=['name','bottom'].includes(state.template)?'Nom / étiquette':'Étiquette';$('colorControls').hidden=state.template==='free';$('colorHeading').textContent=state.template==='type'?'Couleur du fond':state.template==='boxed'?'Couleur des aplats':'Couleur de l’étiquette';document.querySelectorAll('.swatch').forEach(b=>b.classList.toggle('on',b.dataset.hex===(state.template==='type'?state.color:state.photoColor)));render();scheduleSave()}
 palette.forEach(([name,hex])=>{let b=document.createElement('button');b.className='swatch';b.title=name+' · '+hex;b.dataset.hex=hex;b.style.background=hex;b.onclick=()=>{if(state.template==='type')state.color=hex;else state.photoColor=hex;sync()};$('swatches').append(b)});
 document.querySelectorAll('[data-template]').forEach(b=>b.onclick=()=>{state.template=b.dataset.template;if(state.template==='type'){$('labelText').value=TYPE_DEFAULTS.label;}if(defaults[state.template]){$('labelText').value=defaults[state.template].label;$('photoTitle').value=defaults[state.template].title;state.photoColor=defaults[state.template].color;}sync()});document.querySelectorAll('[data-format]').forEach(b=>b.onclick=()=>{state.format=b.dataset.format;sync()});
 let savePending=false;
-function scheduleSave(){if(savePending)return;savePending=true;queueMicrotask(()=>{savePending=false;try{localStorage.setItem(STORAGE_KEY,JSON.stringify({template:state.template,format:state.format,color:state.color,photoColor:state.photoColor,mainText:$('mainText').value,secondaryText:$('secondaryText').value,photoTitle:$('photoTitle').value,labelText:$('labelText').value,zoom:$('zoom').value,panx:$('panx').value,pany:$('pany').value}));$('saveStatus').textContent='Modifications enregistrées automatiquement dans ce navigateur.'}catch(e){$('saveStatus').textContent='Enregistrement local indisponible : exportez votre visuel avant de fermer.'}})}
-function restoreSession(){try{const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||'null');if(!saved)return;const allowed=['photo','type','free','portrait','boxed','name','bottom'];if(allowed.includes(saved.template))state.template=saved.template;if(['portrait','square'].includes(saved.format))state.format=saved.format;if(palette.some(p=>p[1]===saved.color))state.color=saved.color;if(palette.some(p=>p[1]===saved.photoColor))state.photoColor=saved.photoColor;for(const id of ['mainText','secondaryText','photoTitle','labelText','zoom','panx','pany'])if(saved[id]!==undefined)$(id).value=saved[id];$('saveStatus').textContent='Session précédente restaurée. Les photos doivent être réimportées.'}catch(e){$('saveStatus').textContent='Nouvelle session : aucun brouillon restauré.'}}
+function scheduleSave(){if(savePending)return;savePending=true;queueMicrotask(()=>{savePending=false;try{localStorage.setItem(STORAGE_KEY,JSON.stringify({template:state.template,format:state.format,color:state.color,photoColor:state.photoColor,mainText:$('mainText').value,secondaryText:$('secondaryText').value,photoTitle:$('photoTitle').value,labelText:$('labelText').value,zoom:$('zoom').value,panx:$('panx').value,pany:$('pany').value}));$('saveStatus').textContent='';$('saveStatus').hidden=true}catch(e){$('saveStatus').textContent='Enregistrement indisponible : exportez avant de fermer.';$('saveStatus').hidden=false}})}
+function restoreSession(){try{const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||'null');if(!saved)return;const allowed=['photo','type','free','portrait','boxed','name','bottom'];if(allowed.includes(saved.template))state.template=saved.template;if(['portrait','square'].includes(saved.format))state.format=saved.format;if(palette.some(p=>p[1]===saved.color))state.color=saved.color;if(palette.some(p=>p[1]===saved.photoColor))state.photoColor=saved.photoColor;for(const id of ['mainText','secondaryText','photoTitle','labelText','zoom','panx','pany'])if(saved[id]!==undefined)$(id).value=saved[id];$('saveStatus').textContent='Brouillon restauré. Réimportez votre photo au besoin.';$('saveStatus').hidden=false}catch(e){$('saveStatus').textContent='';$('saveStatus').hidden=true}}
 $('resetComposition').onclick=()=>{if(!confirm('Réinitialiser les textes, couleurs et le cadrage de cette composition ?'))return;const d=defaults[state.template];if(state.template==='type'){$('mainText').value=TYPE_DEFAULTS.main;$('secondaryText').value=TYPE_DEFAULTS.secondary;$('labelText').value=TYPE_DEFAULTS.label;state.color=TYPE_DEFAULTS.color;}else if(d){$('photoTitle').value=d.title;$('labelText').value=d.label;state.photoColor=d.color;}$('zoom').value=1;$('panx').value=50;$('pany').value=50;sync();};
 ['mainText','secondaryText','photoTitle','labelText','zoom','panx','pany'].forEach(id=>$(id).addEventListener('input',sync));
 $('resetCrop').onclick=()=>setCrop(1,50,50);
@@ -141,16 +260,51 @@ canvas.addEventListener('wheel',e=>{
  e.preventDefault();const r=canvas.getBoundingClientRect();
  zoomAt(+$('zoom').value*(e.deltaY<0?1.075:1/1.075),(e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height);
 },{passive:false});
-$('upload').onchange=e=>{let f=e.target.files[0];if(!f)return;let u=URL.createObjectURL(f),im=new Image();im.onload=()=>{state.image=im;URL.revokeObjectURL(u);setCrop(1,50,50)};im.src=u};
+function loadPhoto(f){
+ if(!f)return;
+ if(!f.type.startsWith('image/')){$('warning').textContent='Choisissez un fichier image.';return}
+ const u=URL.createObjectURL(f),im=new Image();
+ im.onload=()=>{
+   state.image=im;URL.revokeObjectURL(u);
+   $('photoPicker').classList.add('has-photo');
+   $('photoPickerTitle').textContent=f.name;
+   $('photoPickerSubtitle').textContent='Modifier la photo';
+   $('warning').textContent='';
+   setCrop(1,50,50);
+ };
+ im.onerror=()=>{URL.revokeObjectURL(u);$('warning').textContent='Cette image ne peut pas être ouverte.'};
+ im.src=u;
+}
+$('photoPickerButton').onclick=()=>$('upload').click();
+$('canvasEmpty').onclick=()=>$('upload').click();
+$('canvasReplace').onclick=()=>$('upload').click();
+const shell=$('canvasShell');
+shell.addEventListener('dragover',e=>{
+ if(!photoTemplates.includes(state.template))return;
+ e.preventDefault();shell.classList.add('is-dragging');
+});
+shell.addEventListener('dragleave',e=>{
+ if(!shell.contains(e.relatedTarget))shell.classList.remove('is-dragging');
+});
+shell.addEventListener('drop',e=>{
+ if(!photoTemplates.includes(state.template))return;
+ e.preventDefault();shell.classList.remove('is-dragging');
+ loadPhoto(e.dataTransfer.files[0]);
+});
+$('upload').onchange=e=>{loadPhoto(e.target.files[0]);e.target.value=''};
+const picker=$('photoPicker');
+picker.addEventListener('dragover',e=>{e.preventDefault();picker.classList.add('is-dragging')});
+picker.addEventListener('dragleave',e=>{if(!picker.contains(e.relatedTarget))picker.classList.remove('is-dragging')});
+picker.addEventListener('drop',e=>{e.preventDefault();picker.classList.remove('is-dragging');loadPhoto(e.dataTransfer.files[0])});
 $('export').onclick=async()=>{
- const button=$('export');button.disabled=true;button.textContent='Préparation du PNG…';
+ const button=$('export');button.disabled=true;button.textContent='Préparation…';
  try{
   if(photoTemplates.includes(state.template)&&!state.image){throw new Error('Importez une photographie avant l’export PNG.');}
   await render();
   const url=canvas.toDataURL('image/png');
   const a=document.createElement('a');a.href=url;a.download=`CAC_${figmaNumbers[state.template]}_${state.template}_${canvas.width}x${canvas.height}.png`;
   document.body.appendChild(a);a.click();a.remove();
-  button.textContent='PNG téléchargé';setTimeout(()=>button.textContent='Exporter le PNG',1800);
+  button.textContent='PNG téléchargé';setTimeout(()=>button.textContent='Télécharger le PNG',1800);
  }catch(err){$('warning').textContent='Export impossible : '+err.message;button.textContent='Réessayer l’export';console.error(err)}
  finally{button.disabled=false}
 };restoreSession();sync();
