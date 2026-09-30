@@ -1,0 +1,157 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CAC — Laboratoire 0.6</title>
+<style>
+@font-face{font-family:Echo;src:url('assets/CAC livraison/Fonts/Echo/EchoV8-Medium.otf')}@font-face{font-family:Basel;src:url('assets/CAC livraison/Fonts/Basel Classic/BaselClassic-Bold.ttf');font-weight:700}
+:root{font-family:Arial,sans-serif;color:#1b1b1b;background:#f5f5f2}*{box-sizing:border-box}body{margin:0}header{height:74px;border-bottom:1px solid #ddd;display:flex;align-items:center;justify-content:space-between;padding:0 32px;background:#fafaf8}header b{font-size:19px;letter-spacing:-.5px}header span{font-size:11px;letter-spacing:.12em;color:#777}main{display:grid;grid-template-columns:365px 1fr;min-height:calc(100vh - 74px)}aside{background:#fafaf8;border-right:1px solid #ddd;padding:25px;display:flex;flex-direction:column;gap:19px;max-height:calc(100vh - 74px);overflow:auto}section{background:#e9e9e6;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;gap:14px}canvas{display:block;touch-action:none;max-width:min(100%,610px);max-height:76vh;width:auto;height:auto;box-shadow:0 12px 40px #00000012}label{display:block;font-size:11px;font-weight:700;letter-spacing:.035em;margin-bottom:8px}input,select,textarea{width:100%;font:13px Arial;border:1px solid #d7d7d3;background:#fff;padding:10px;border-radius:6px}textarea{resize:vertical;min-height:90px;line-height:1.4}.pair{display:flex;gap:7px}.pair button{flex:1}.pair button,.action{border:1px solid #d6d6d2;border-radius:6px;padding:11px 8px;background:white;cursor:pointer;font:12px Arial}.template-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}.template-grid button{border:1px solid #d6d6d2;border-radius:6px;padding:11px 8px;background:white;cursor:pointer;font:12px Arial;text-align:left}.template-grid button.on{background:#171717;color:#fff;border-color:#171717}.pair button.on{background:#171717;color:#fff;border-color:#171717}.group{border-top:1px solid #e1e1dd;padding-top:18px}.muted{font-size:11px;color:#777;line-height:1.55;margin:7px 0 0}.swatches{display:flex;flex-wrap:wrap;gap:8px}.swatch{width:29px;height:29px;border:1px solid #0002;border-radius:50%;cursor:pointer;padding:0}.swatch.on{outline:2px solid #111;outline-offset:3px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid2 input{width:100%}.action{background:#171717;color:#fff;padding:14px;font-weight:bold}.warn{font-size:12px;line-height:1.5;color:#a34320;min-height:18px}.caption{font-size:11px;color:#777;text-align:center}.photo-active{cursor:grab}.photo-dragging{cursor:grabbing}.preview-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center}.preview-tools button{border:1px solid #ccc;background:#fafaf8;border-radius:6px;padding:8px 12px;cursor:pointer;font-size:12px}.preview-tools button:disabled{opacity:.35;cursor:default}input[type=range]{padding:0;accent-color:#111}input[type=checkbox]{width:auto;vertical-align:middle;margin-right:6px}@media(max-width:820px){main{grid-template-columns:1fr}aside{max-height:none;border-right:0;border-bottom:1px solid #ddd}section{padding:20px}header{padding:0 20px}}
+[hidden]{display:none!important}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid #196FF0;outline-offset:2px}@media(max-width:520px){header{height:auto;min-height:70px;gap:8px;padding:16px}header span{font-size:9px}aside{padding:18px}section{padding:14px}.template-grid{grid-template-columns:1fr 1fr}.preview-tools{max-width:100%}}</style></head><body>
+<header><b>CAC <span style="font-size:18px;letter-spacing:0;color:#777">/ Social Generator</span></b><span>PRINCIPAL LAB · 0.6 · 7 COMPOSITIONS</span></header>
+<main><aside>
+<div><label>COMPOSITION FIGMA</label><div id="templateGrid" class="template-grid"><button data-template="photo">01 · Photo + titre</button><button data-template="type" class="on">02 · Typographie</button><button data-template="free">03 · Photo libre</button><button data-template="portrait">04 · Portrait</button><button data-template="boxed">05 · Titre en aplats</button><button data-template="name">06 · Nom en haut</button><button data-template="bottom">07 · Étiquette en bas</button></div><p class="muted">Sept familles du fichier Figma, chacune en portrait et carré. La composition 03 est aplatie dans la source : elle est proposée comme cadre photo libre.</p></div>
+<div><label>FORMAT</label><div class="pair"><button data-format="portrait" class="on">1080 × 1440</button><button data-format="square">1080 × 1080</button></div></div>
+<div id="typeControls" class="group"><label>TITRE PRINCIPAL · BASEL CLASSIC BOLD</label><textarea id="mainText">Prizes
+announcement</textarea><label style="margin-top:12px">TEXTE SECONDAIRE · BASEL CLASSIC BOLD</label><textarea id="secondaryText">Musical Instrument Bank
+competition winners</textarea><p class="muted">Les retours manuels restent prioritaires. Les lignes longues sont réparties automatiquement et le corps est réduit uniquement si nécessaire.</p></div>
+<div id="photoControls" class="group" hidden><label>PHOTOGRAPHIE</label><input type="file" id="upload" accept="image/*"><p class="muted">Glisse la photographie dans l’aperçu pour la déplacer. Utilise la molette pour zoomer, ou les réglages ci-dessous. Importer une photo autorisée.</p><div class="grid2" style="margin-top:13px"><div><label>ZOOM <span id="zoomValue">100 %</span></label><input type="range" id="zoom" min="1" max="3" step=".01" value="1"></div><div><label>HORIZONTAL</label><input type="range" id="panx" min="0" max="100" value="50"></div></div><label style="margin-top:12px">VERTICAL</label><input type="range" id="pany" min="0" max="100" value="50"><div style="margin-top:12px" class="pair"><button type="button" id="resetCrop">Réinitialiser le cadrage</button><button type="button" id="centerCrop">Centrer</button></div><div id="photoTitleControls"><label style="margin-top:13px">TITRE · BASEL CLASSIC BOLD</label><textarea id="photoTitle">Prix
+John-Hobday
+2024</textarea></div></div>
+<div class="group" id="colorControls"><label id="colorHeading">COULEUR DE FOND / ÉTIQUETTE</label><div id="swatches" class="swatches"></div><p id="colorHelp" class="muted"></p></div>
+<div class="group" id="labelControls"><label id="labelHeading">ÉTIQUETTE · ECHO MEDIUM</label><input id="labelText" value="Discover"></div>
+<div class="group"><div class="pair"><button type="button" id="resetComposition">Réinitialiser la composition</button></div><p class="muted" id="saveStatus" role="status">Les modifications sont enregistrées automatiquement dans ce navigateur.</p></div><div class="warn" id="warning" role="status" aria-live="polite"></div><button class="action" id="export">Exporter le PNG</button><p class="muted">Conseil : les images importées ne sont pas conservées après la fermeture de la page. Les textes, couleurs et réglages le sont.</p><p class="muted">Les fontes sont chargées localement à partir des assets de la v0.1. Les photographies Figma ne sont pas incluses : importez vos images autorisées.</p>
+</aside><section><canvas id="canvas" width="1080" height="1440"></canvas><div class="preview-tools"><button type="button" id="zoomOut" aria-label="Dézoomer">−</button><span id="previewHint" class="caption">Sélectionner une composition photo pour recadrer</span><button type="button" id="zoomIn" aria-label="Zoomer">+</button></div><div class="caption" id="caption">Aperçu · 1080 × 1440 · Figma 02</div></section></main>
+<script>
+const $=id=>document.getElementById(id),canvas=$('canvas'),ctx=canvas.getContext('2d');
+const STORAGE_KEY='principal-cac-lab-v06';
+const TYPE_DEFAULTS={main:'Prizes\nannouncement',secondary:'Musical Instrument Bank\ncompetition winners',label:'Discover',color:'#ECEAE7'};
+
+const palette=[['Blanc fumée','#ECEAE7'],['Bleu','#196FF0'],['Vert','#15BE09'],['Orange','#F36317'],['Rouge','#E52249'],['Jaune','#EBC40F'],['Bleu clair','#E0F0FF'],['Céladon','#B6D3AE'],['Marron','#917A37'],['Rose','#FFC3F2'],['Jaune clair','#F8F287'],['Blanc','#FFFFFF'],['Noir','#000000']];
+let state={template:'type',format:'portrait',color:'#ECEAE7',image:null,photoColor:'#FFC3F2'},generation=0,drag=null;const photoTemplates=['photo','free','portrait','boxed','name','bottom'];const figmaNumbers={photo:'01',type:'02',free:'03',portrait:'04',boxed:'05',name:'06',bottom:'07'};const defaults={photo:{label:'Discover',title:'Prix\nJohn-Hobday\n2024',color:'#FFC3F2'},free:{label:'',title:'',color:'#ECEAE7'},portrait:{label:'Discover',title:'Aaron\nJ.Williams',color:'#FFC3F2'},boxed:{label:'',title:'Canadian\nIcon',color:'#B6D3AE'},name:{label:'Russell Wangersky',title:'',color:'#F36317'},bottom:{label:'CEO Letter to the Arts Community',title:'',color:'#196FF0'}};
+function luminance(hex){const c=hex.slice(1).match(/../g).map(x=>parseInt(x,16)/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4);return .2126*c[0]+.7152*c[1]+.0722*c[2]}
+function contrast(a,b){const x=luminance(a),y=luminance(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05)}
+function bestInk(bg){return contrast(bg,'#000000')>=contrast(bg,'#FFFFFF')?'#000000':'#FFFFFF'}
+function lines(text){return text.split('\n').map(x=>x.trim()).filter(Boolean)}
+function wrapText(value,size,maxWidth){
+ ctx.font=`700 ${size}px Basel`;
+ const result=[];
+ for(const paragraph of value.split('\n')){
+  if(!paragraph.trim()){result.push('');continue}
+  let line='';
+  for(const word of paragraph.trim().split(/\s+/)){
+   const candidate=line?line+' '+word:word;
+   if(ctx.measureText(candidate).width<=maxWidth){line=candidate;continue}
+   if(line){result.push(line);line=''}
+   if(ctx.measureText(word).width<=maxWidth){line=word;continue}
+   // Long words and URLs: split by character so they cannot escape the canvas.
+   let chunk='';for(const ch of word){if(chunk&&ctx.measureText(chunk+ch).width>maxWidth){result.push(chunk);chunk=''}chunk+=ch}line=chunk;
+  }
+  if(line)result.push(line);
+ }
+ return result;
+}
+function fittedText(value,x,y,width,height,desiredSize,minSize,ink,alignBottom=false){
+ let size=desiredSize,arr=[];
+ while(size>=minSize){arr=wrapText(value,size,width);if(arr.length*size<=height)break;size-=2}
+ let errors=[];
+ if(arr.length*size>height){errors.push('Le texte est trop long : raccourcissez-le pour ce format.');size=minSize;arr=wrapText(value,size,width)}
+ const lineHeight=size;
+ const top=alignBottom?y+height-arr.length*lineHeight:y;
+ ctx.save();ctx.beginPath();ctx.rect(x,y,width,height);ctx.clip();ctx.font=`700 ${size}px Basel`;ctx.textBaseline='top';ctx.fillStyle=ink;
+ arr.forEach((line,i)=>ctx.fillText(line,x,top+i*lineHeight));ctx.restore();
+ return {height:arr.length*lineHeight,size,errors,lines:arr};
+}
+function imageCover(img,w,h){let zoom=+$('zoom').value,scale=Math.max(w/img.width,h/img.height)*zoom,iw=img.width*scale,ih=img.height*scale;return {x:-(iw-w)*(+$('panx').value/100),y:-(ih-h)*(+$('pany').value/100),w:iw,h:ih}}
+function setCrop(zoom,panx,pany){$('zoom').value=Math.max(1,Math.min(3,zoom));$('panx').value=Math.max(0,Math.min(100,panx));$('pany').value=Math.max(0,Math.min(100,pany));sync()}
+function zoomAt(nextZoom,px=.5,py=.5){
+ const img=state.image;if(!img)return;
+ const w=1080,h=state.format==='portrait'?1440:1080,old=imageCover(img,w,h);
+ const oldZoom=+$('zoom').value,zoom=Math.max(1,Math.min(3,nextZoom));
+ const ratio=zoom/oldZoom,oldX=old.x,oldY=old.y;
+ // Preserve the image pixel under the pointer while changing scale.
+ const newX=px*w-(px*w-oldX)*ratio,newY=py*h-(py*h-oldY)*ratio;
+ const newW=old.w*ratio,newH=old.h*ratio;
+ setCrop(zoom,newW>w?(100*-newX/(newW-w)):50,newH>h?(100*-newY/(newH-h)):50);
+}
+function drawPhoto(w,h,errors){let img=state.image;if(img){ctx.save();ctx.beginPath();ctx.rect(0,0,w,h);ctx.clip();let r=imageCover(img,w,h);ctx.drawImage(img,r.x,r.y,r.w,r.h);ctx.restore()}else{ctx.fillStyle='#c7c7c7';ctx.fillRect(0,0,w,h);ctx.fillStyle='#555';ctx.font='36px Arial';ctx.fillText('Importer une photographie',50,h/2);errors.push('Photographie manquante : importer une image pour exporter.')}}
+function drawLabel(value,x,y,color,maxWidth=980){if(!value.trim())return [];let ink=bestInk(color),size=50;ctx.font=`${size}px Echo`;while(ctx.measureText(value).width>maxWidth-50&&size>17){size-=1;ctx.font=`${size}px Echo`}let width=Math.min(maxWidth,ctx.measureText(value).width+50),height=87.1;ctx.fillStyle=color;ctx.fillRect(x,y,width,height);ctx.fillStyle=ink;ctx.textBaseline='middle';ctx.save();ctx.beginPath();ctx.rect(x+25,y,width-50,height);ctx.clip();ctx.fillText(value,x+25,y+height/2);ctx.restore();return ctx.measureText(value).width>maxWidth-50?['Étiquette trop longue : raccourcir le texte.']:[]}
+function drawBoxedTitle(value,color,w,h){let rows=wrapText(value,150,w-100),size=150;while(size>46&&(rows.length*(size+60)+Math.max(0,rows.length-1)*10>h-80||rows.some(t=>{ctx.font=`700 ${size}px Basel`;return ctx.measureText(t).width>w-100}))){size-=2;rows=wrapText(value,size,w-100)}let y=40;for(const line of rows){ctx.font=`700 ${size}px Basel`;let bw=Math.min(w-80,ctx.measureText(line).width+50),bh=size+50;ctx.fillStyle=color;ctx.fillRect(40,y,bw,bh);ctx.fillStyle='#000';ctx.textBaseline='top';ctx.fillText(line,65,y+25);y+=bh+10}return y>h-20?['Titre trop long pour les aplats : raccourcir le contenu.']:[]}
+async function render(){let seq=++generation;await Promise.all([document.fonts.load('700 150px Basel'),document.fonts.load('50px Echo')]);await document.fonts.ready;let w=1080,h=state.format==='portrait'?1440:1080;canvas.width=w;canvas.height=h;let errors=[],isType=state.template==='type',bg=isType?state.color:'#ECEAE7';ctx.fillStyle=bg;ctx.fillRect(0,0,w,h);
+if(isType){
+ const mainText=$('mainText').value,secondaryText=$('secondaryText').value;
+ // Fit both text blocks together; wrap each paragraph and preserve the original
+ // Basel scale unless their combined height requires a proportional reduction.
+ let size=128.807,main=[],secondary=[],usable=h-50-205;
+ while(size>=38){main=wrapText(mainText,size,980);secondary=wrapText(secondaryText,size,980);if((main.length+secondary.length)*size<=usable)break;size-=2}
+ if((main.length+secondary.length)*size>usable)errors.push('Texte trop long même au corps minimum : raccourcir le contenu.');
+ const mainH=main.length*size,secondaryH=secondary.length*size;
+ const first=fittedText(mainText,50,50,980,Math.min(mainH,usable),size,size,'#000000');
+ const remaining=Math.max(0,usable-first.height);
+ const second=fittedText(secondaryText,50,50+first.height,980,remaining,size,size,'rgba(0,0,0,0.5)');
+ errors.push(...first.errors,...second.errors);
+ let bx=50,by=h-146,bw=252.1,bh=96.43;
+ ctx.lineWidth=2.477;ctx.strokeStyle='#000';ctx.strokeRect(bx+1.25,by+1.25,bw-2.5,bh-2.5);
+ let label=$('labelText').value;
+ ctx.textBaseline='middle';let labelSize=48.063;do{ctx.font=`${labelSize}px Echo`;if(ctx.measureText(label).width<=bw-50)break;labelSize-=1}while(labelSize>16);
+ ctx.fillStyle='#000';ctx.save();ctx.beginPath();ctx.rect(bx+25,by,bw-50,bh);ctx.clip();ctx.fillText(label,bx+25,by+bh/2);ctx.restore();
+ if(ctx.measureText(label).width>bw-50)errors.push('Étiquette trop longue : raccourcissez-la.');
+}else{
+ drawPhoto(w,h,errors);
+ const t=state.template,label=$('labelText').value,title=$('photoTitle').value,lc=state.photoColor;
+ if(t==='photo'){
+  errors.push(...drawLabel(label,50,50,lc));
+  errors.push(...fittedText(title,52,Math.round(h*.36),978,Math.round(h*.64)-50,150,48,'#FFFFFF',true).errors);
+ }else if(t==='portrait'){
+  errors.push(...fittedText(title,50,50,980,Math.max(100,h-230),150,48,'#FFFFFF').errors);
+  errors.push(...drawLabel(label,50,h-136,lc));
+ }else if(t==='boxed'){
+  errors.push(...drawBoxedTitle(title,lc,w,h));
+ }else if(t==='name'){
+  errors.push(...drawLabel(label,50,50,lc));
+ }else if(t==='bottom'){
+  errors.push(...drawLabel(label,50,h-136,lc));
+ }
+
+}
+$('zoomValue').textContent=Math.round(+$('zoom').value*100)+' %';$('warning').textContent=errors.length?[...new Set(errors)].join(' · '):'Aucun débordement détecté pour les textes saisis.';$('warning').style.color=errors.length?'#a34320':'#497e56';$('caption').textContent=`Aperçu · ${w} × ${h} · Figma ${figmaNumbers[state.template]}`;return errors}
+function sync(){canvas.classList.toggle('photo-active',photoTemplates.includes(state.template)&&!!state.image);$('previewHint').textContent=photoTemplates.includes(state.template)?'Glisser pour recadrer · Molette pour zoomer':'Composition typographique';$('zoomOut').disabled=$('zoomIn').disabled=!photoTemplates.includes(state.template)||!state.image;document.querySelectorAll('[data-template]').forEach(b=>b.classList.toggle('on',b.dataset.template===state.template));document.querySelectorAll('[data-format]').forEach(b=>b.classList.toggle('on',b.dataset.format===state.format));$('typeControls').hidden=state.template!=='type';$('photoControls').hidden=!photoTemplates.includes(state.template);$('photoTitleControls').hidden=!['photo','portrait','boxed'].includes(state.template);$('labelControls').hidden=['free','boxed'].includes(state.template);$('labelHeading').textContent=['name','bottom'].includes(state.template)?'NOM / ÉTIQUETTE · ECHO MEDIUM':'ÉTIQUETTE · ECHO MEDIUM';$('colorControls').hidden=state.template==='free';$('colorHeading').textContent=state.template==='type'?'COULEUR DE FOND':'COULEUR DE L’ÉTIQUETTE / DES APLATS';$('colorHelp').textContent=state.template==='type'?'Le fond original du template 02 est Blanc fumée. Les autres fonds sont des variations de laboratoire.':state.template==='boxed'?'La couleur sélectionnée s’applique aux aplats typographiques.':state.template==='free'?'Composition 03 aplatie dans Figma : cadre photo libre, sans reconstruction des éléments intégrés.':'La couleur sélectionnée s’applique à l’étiquette. La photo couvre le fond, comme dans Figma.';document.querySelectorAll('.swatch').forEach(b=>b.classList.toggle('on',b.dataset.hex===(state.template==='type'?state.color:state.photoColor)));render();scheduleSave()}
+palette.forEach(([name,hex])=>{let b=document.createElement('button');b.className='swatch';b.title=name+' · '+hex;b.dataset.hex=hex;b.style.background=hex;b.onclick=()=>{if(state.template==='type')state.color=hex;else state.photoColor=hex;sync()};$('swatches').append(b)});
+document.querySelectorAll('[data-template]').forEach(b=>b.onclick=()=>{state.template=b.dataset.template;if(state.template==='type'){$('labelText').value=TYPE_DEFAULTS.label;}if(defaults[state.template]){$('labelText').value=defaults[state.template].label;$('photoTitle').value=defaults[state.template].title;state.photoColor=defaults[state.template].color;}sync()});document.querySelectorAll('[data-format]').forEach(b=>b.onclick=()=>{state.format=b.dataset.format;sync()});
+let savePending=false;
+function scheduleSave(){if(savePending)return;savePending=true;queueMicrotask(()=>{savePending=false;try{localStorage.setItem(STORAGE_KEY,JSON.stringify({template:state.template,format:state.format,color:state.color,photoColor:state.photoColor,mainText:$('mainText').value,secondaryText:$('secondaryText').value,photoTitle:$('photoTitle').value,labelText:$('labelText').value,zoom:$('zoom').value,panx:$('panx').value,pany:$('pany').value}));$('saveStatus').textContent='Modifications enregistrées automatiquement dans ce navigateur.'}catch(e){$('saveStatus').textContent='Enregistrement local indisponible : exportez votre visuel avant de fermer.'}})}
+function restoreSession(){try{const saved=JSON.parse(localStorage.getItem(STORAGE_KEY)||'null');if(!saved)return;const allowed=['photo','type','free','portrait','boxed','name','bottom'];if(allowed.includes(saved.template))state.template=saved.template;if(['portrait','square'].includes(saved.format))state.format=saved.format;if(palette.some(p=>p[1]===saved.color))state.color=saved.color;if(palette.some(p=>p[1]===saved.photoColor))state.photoColor=saved.photoColor;for(const id of ['mainText','secondaryText','photoTitle','labelText','zoom','panx','pany'])if(saved[id]!==undefined)$(id).value=saved[id];$('saveStatus').textContent='Session précédente restaurée. Les photos doivent être réimportées.'}catch(e){$('saveStatus').textContent='Nouvelle session : aucun brouillon restauré.'}}
+$('resetComposition').onclick=()=>{if(!confirm('Réinitialiser les textes, couleurs et le cadrage de cette composition ?'))return;const d=defaults[state.template];if(state.template==='type'){$('mainText').value=TYPE_DEFAULTS.main;$('secondaryText').value=TYPE_DEFAULTS.secondary;$('labelText').value=TYPE_DEFAULTS.label;state.color=TYPE_DEFAULTS.color;}else if(d){$('photoTitle').value=d.title;$('labelText').value=d.label;state.photoColor=d.color;}$('zoom').value=1;$('panx').value=50;$('pany').value=50;sync();};
+['mainText','secondaryText','photoTitle','labelText','zoom','panx','pany'].forEach(id=>$(id).addEventListener('input',sync));
+$('resetCrop').onclick=()=>setCrop(1,50,50);
+$('centerCrop').onclick=()=>setCrop(+$('zoom').value,50,50);
+$('zoomOut').onclick=()=>zoomAt(+$('zoom').value-.1);
+$('zoomIn').onclick=()=>zoomAt(+$('zoom').value+.1);
+canvas.addEventListener('pointerdown',e=>{
+ if(!photoTemplates.includes(state.template)||!state.image)return;
+ e.preventDefault();canvas.setPointerCapture(e.pointerId);canvas.classList.add('photo-dragging');
+ drag={x:e.clientX,y:e.clientY,panx:+$('panx').value,pany:+$('pany').value};
+});
+canvas.addEventListener('pointermove',e=>{
+ if(!drag||!state.image)return;
+ const rect=canvas.getBoundingClientRect(),w=1080,h=state.format==='portrait'?1440:1080,r=imageCover(state.image,w,h);
+ const dx=(e.clientX-drag.x)*w/rect.width,dy=(e.clientY-drag.y)*h/rect.height;
+ const panx=r.w>w?drag.panx-dx/(r.w-w)*100:50,pany=r.h>h?drag.pany-dy/(r.h-h)*100:50;
+ $('panx').value=Math.max(0,Math.min(100,panx));$('pany').value=Math.max(0,Math.min(100,pany));sync();
+});
+function stopDrag(){drag=null;canvas.classList.remove('photo-dragging')}
+canvas.addEventListener('pointerup',stopDrag);canvas.addEventListener('pointercancel',stopDrag);
+canvas.addEventListener('wheel',e=>{
+ if(!photoTemplates.includes(state.template)||!state.image)return;
+ e.preventDefault();const r=canvas.getBoundingClientRect();
+ zoomAt(+$('zoom').value*(e.deltaY<0?1.075:1/1.075),(e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height);
+},{passive:false});
+$('upload').onchange=e=>{let f=e.target.files[0];if(!f)return;let u=URL.createObjectURL(f),im=new Image();im.onload=()=>{state.image=im;URL.revokeObjectURL(u);setCrop(1,50,50)};im.src=u};
+$('export').onclick=async()=>{
+ const button=$('export');button.disabled=true;button.textContent='Préparation du PNG…';
+ try{
+  if(photoTemplates.includes(state.template)&&!state.image){throw new Error('Importez une photographie avant l’export PNG.');}
+  await render();
+  const url=canvas.toDataURL('image/png');
+  const a=document.createElement('a');a.href=url;a.download=`CAC_${figmaNumbers[state.template]}_${state.template}_${canvas.width}x${canvas.height}.png`;
+  document.body.appendChild(a);a.click();a.remove();
+  button.textContent='PNG téléchargé';setTimeout(()=>button.textContent='Exporter le PNG',1800);
+ }catch(err){$('warning').textContent='Export impossible : '+err.message;button.textContent='Réessayer l’export';console.error(err)}
+ finally{button.disabled=false}
+};restoreSession();sync();
+</script></body></html>
