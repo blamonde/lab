@@ -1,0 +1,466 @@
+{
+  "Brand-Horizontal / Intro-Title / Position": [
+    {
+      "time": 1.8,
+      "value": [
+        1506,
+        640,
+        0
+      ],
+      "inInterpolation": "6613",
+      "outInterpolation": "6613",
+      "temporalContinuous": false,
+      "temporalAutoBezier": false,
+      "inEase": [
+        {
+          "speed": 0,
+          "influence": 16.666666667
+        }
+      ],
+      "outEase": [
+        {
+          "speed": 0,
+          "influence": 0.01
+        }
+      ],
+      "spatialContinuous": true,
+      "spatialAutoBezier": false,
+      "inSpatialTangent": [
+        0,
+        0,
+        0
+      ],
+      "outSpatialTangent": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "time": 2.16666666666667,
+      "value": [
+        1134,
+        640,
+        0
+      ],
+      "inInterpolation": "6613",
+      "outInterpolation": "6613",
+      "temporalContinuous": false,
+      "temporalAutoBezier": false,
+      "inEase": [
+        {
+          "speed": 0,
+          "influence": 100
+        }
+      ],
+      "outEase": [
+        {
+          "speed": 0,
+          "influence": 9.57800850517295
+        }
+      ],
+      "spatialContinuous": true,
+      "spatialAutoBezier": false,
+      "inSpatialTangent": [
+        0,
+        0,
+        0
+      ],
+      "outSpatialTangent": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "time": 2.8,
+      "value": [
+        1134,
+        640,
+        0
+      ],
+      "inInterpolation": "6613",
+      "outInterpolation": "6613",
+      "temporalContinuous": false,
+      "temporalAutoBezier": false,
+      "inEase": [
+        {
+          "speed": 0,
+          "influence": 33.333333
+        }
+      ],
+      "outEase": [
+        {
+          "speed": 0,
+          "influence": 0.01
+        }
+      ],
+      "spatialContinuous": true,
+      "spatialAutoBezier": false,
+      "inSpatialTangent": [
+        0,
+        0,
+        0
+      ],
+      "outSpatialTangent": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "time": 3.2,
+      "value": [
+        770,
+        640,
+        0
+      ],
+      "inInterpolation": "6613",
+      "outInterpolation": "6612",
+      "temporalContinuous": false,
+      "temporalAutoBezier": false,
+      "inEase": [
+        {
+          "speed": 0,
+          "influence": 100
+        }
+      ],
+      "outEase": [
+        {
+          "speed": 0,
+          "influence": 16.666666667
+        }
+      ],
+      "spatialContinuous": true,
+      "spatialAutoBezier": false,
+      "inSpatialTangent": [
+        0,
+        0,
+        0
+      ],
+      "outSpatialTangent": [
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "Brand-Horizontal / Green / Position": [
+    {
+      "time": 3.78333333333333,
+      "value": [
+        2158,
+        640,
+        0
+      ],
+      "inInterpolation": "6612",
+      "outInterpolation": "6613",
+      "temporalContinuous": false,
+      "temporalAutoBezier": false,
+      "inEase": [
+        {
+          "speed": 0,
+          "influence": 16.666666667
+        }
+      ],
+      "outEase": [
+        {
+          "speed": 0,
+          "influence": 0.01
+        }
+      ],
+      "spatialContinuous": true,
+      "spatialAutoBezier": false,
+      "inSpatialTangent": [
+        0,
+        0,
+        0
+      ],
+      "outSpatialTangent": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "time": 4.23333333333333,
+      "value": [
+        1138,
+        640,
+        0
+      ],
+      "inInterpolation": "6613",
+      "outInterpolation": "6612",
+      "temporalContinuous": false,
+      "temporalAutoBezier": false,
+      "inEase": [
+        {
+          "speed": 0,
+          "influence": 100
+        }
+      ],
+      "outEase": [
+        {
+          "speed": 0,
+          "influence": 16.666666667
+        }
+      ],
+      "spatialContinuous": true,
+      "spatialAutoBezier": false,
+      "inSpatialTangent": [
+        0,
+        0,
+        0
+      ],
+      "outSpatialTangent": [
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "Intro-Title / Service: / Opacité": [
+    {
+      "time": 2.98333333333333,
+      "value": 100,
+      "inInterpolation": "6612",
+      "outInterpolation": "6612",
+      "temporalContinuous": false,
+      "temporalAutoBezier": false,
+      "inEase": [
+        {
+          "speed": 0,
+          "influence": 16.666666667
+        }
+      ],
+      "outEase": [
+        {
+          "speed": -4200,
+          "influence": 16.666666667
+        }
+      ],
+      "spatialContinuous": null,
+      "spatialAutoBezier": null,
+      "inSpatialTangent": null,
+      "outSpatialTangent": null
+    },
+    {
+      "time": 3,
+      "value": 30,
+      "inInterpolation": "6612",
+      "outInterpolation": "6612",
+      "temporalContinuous": false,
+      "temporalAutoBezier": false,
+      "inEase": [
+        {
+          "speed": -4200,
+          "influence": 16.666666667
+        }
+      ],
+      "outEase": [
+        {
+          "speed": 0,
+          "influence": 16.666666667
+        }
+      ],
+      "spatialContinuous": null,
+      "spatialAutoBezier": null,
+      "inSpatialTangent": null,
+      "outSpatialTangent": null
+    },
+    {
+      "time": 3.98333333333333,
+      "value": 30,
+      "inInterpolation": "6612",
+      "outInterpolation": "6612",
+      "temporalContinuous": false,
+      "temporalAutoBezier": false,
+      "inEase": [
+        {
+          "speed": 0,
+          "influence": 16.666666667
+        }
+      ],
+      "outEase": [
+        {
+          "speed": -1800,
+          "influence": 16.666666667
+        }
+      ],
+      "spatialContinuous": null,
+      "spatialAutoBezier": null,
+      "inSpatialTangent": null,
+      "outSpatialTangent": null
+    },
+    {
+      "time": 4,
+      "value": 0,
+      "inInterpolation": "6612",
+      "outInterpolation": "6612",
+      "temporalContinuous": false,
+      "temporalAutoBezier": false,
+      "inEase": [
+        {
+          "speed": -1800,
+          "influence": 16.666666667
+        }
+      ],
+      "outEase": [
+        {
+          "speed": 0,
+          "influence": 16.666666667
+        }
+      ],
+      "spatialContinuous": null,
+      "spatialAutoBezier": null,
+      "inSpatialTangent": null,
+      "outSpatialTangent": null
+    }
+  ],
+  "Intro-Title / Principal / Opacité": [
+    {
+      "time": 1.98333333333333,
+      "value": 100,
+      "inInterpolation": "6612",
+      "outInterpolation": "6612",
+      "temporalContinuous": false,
+      "temporalAutoBezier": false,
+      "inEase": [
+        {
+          "speed": 0,
+          "influence": 16.666666667
+        }
+      ],
+      "outEase": [
+        {
+          "speed": -4200,
+          "influence": 16.666666667
+        }
+      ],
+      "spatialContinuous": null,
+      "spatialAutoBezier": null,
+      "inSpatialTangent": null,
+      "outSpatialTangent": null
+    },
+    {
+      "time": 2,
+      "value": 30,
+      "inInterpolation": "6612",
+      "outInterpolation": "6612",
+      "temporalContinuous": false,
+      "temporalAutoBezier": false,
+      "inEase": [
+        {
+          "speed": -4200,
+          "influence": 16.666666667
+        }
+      ],
+      "outEase": [
+        {
+          "speed": 0,
+          "influence": 16.666666667
+        }
+      ],
+      "spatialContinuous": null,
+      "spatialAutoBezier": null,
+      "inSpatialTangent": null,
+      "outSpatialTangent": null
+    },
+    {
+      "time": 2.98333333333333,
+      "value": 30,
+      "inInterpolation": "6612",
+      "outInterpolation": "6612",
+      "temporalContinuous": false,
+      "temporalAutoBezier": false,
+      "inEase": [
+        {
+          "speed": 0,
+          "influence": 16.666666667
+        }
+      ],
+      "outEase": [
+        {
+          "speed": -1800,
+          "influence": 16.666666667
+        }
+      ],
+      "spatialContinuous": null,
+      "spatialAutoBezier": null,
+      "inSpatialTangent": null,
+      "outSpatialTangent": null
+    },
+    {
+      "time": 3,
+      "value": 0,
+      "inInterpolation": "6612",
+      "outInterpolation": "6612",
+      "temporalContinuous": false,
+      "temporalAutoBezier": false,
+      "inEase": [
+        {
+          "speed": -1800,
+          "influence": 16.666666667
+        }
+      ],
+      "outEase": [
+        {
+          "speed": 0,
+          "influence": 16.666666667
+        }
+      ],
+      "spatialContinuous": null,
+      "spatialAutoBezier": null,
+      "inSpatialTangent": null,
+      "outSpatialTangent": null
+    },
+    {
+      "time": 3.98333333333333,
+      "value": 0,
+      "inInterpolation": "6612",
+      "outInterpolation": "6612",
+      "temporalContinuous": false,
+      "temporalAutoBezier": false,
+      "inEase": [
+        {
+          "speed": 0,
+          "influence": 16.666666667
+        }
+      ],
+      "outEase": [
+        {
+          "speed": 0,
+          "influence": 16.666666667
+        }
+      ],
+      "spatialContinuous": null,
+      "spatialAutoBezier": null,
+      "inSpatialTangent": null,
+      "outSpatialTangent": null
+    },
+    {
+      "time": 4,
+      "value": 0,
+      "inInterpolation": "6612",
+      "outInterpolation": "6612",
+      "temporalContinuous": false,
+      "temporalAutoBezier": false,
+      "inEase": [
+        {
+          "speed": 0,
+          "influence": 16.666666667
+        }
+      ],
+      "outEase": [
+        {
+          "speed": 0,
+          "influence": 16.666666667
+        }
+      ],
+      "spatialContinuous": null,
+      "spatialAutoBezier": null,
+      "inSpatialTangent": null,
+      "outSpatialTangent": null
+    }
+  ]
+}
