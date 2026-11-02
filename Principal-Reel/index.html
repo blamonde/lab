@@ -1,0 +1,164 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Principal — Reel / V41</title><style>
+@font-face{font-family:Principal;src:url('StudioPrincipal-SemiBold.otf') format('opentype');font-display:swap;font-weight:600;font-style:normal}*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:#000;color:white;font-family:Principal,Arial,sans-serif;font-weight:600;overflow:hidden}button{font:inherit;cursor:pointer}.screen{position:absolute;inset:0;background:#000;overflow:hidden}.video{width:100%;height:100%;object-fit:cover;display:block}.transition{position:absolute;inset:0;overflow:hidden;background:#000;display:none;z-index:3}.scene{position:absolute;width:2276px;height:1280px;left:0;top:0;transform-origin:0 0;overflow:hidden}.green{position:absolute;width:2276px;height:1280px;top:0;left:0;background:var(--accent)}.txt{position:absolute;white-space:nowrap;font-size:80px;line-height:1;font-weight:600;color:white}.principal{left:600px;top:604px}.service{left:996px;top:604px}.name{left:1360px;top:604px}.menu{display:flex;flex-direction:column;align-items:flex-start;gap:1px;min-width:0}.brand{font-size:16px;margin-bottom:10px}.menu button{border:0;background:transparent;color:#fff;font-size:12px;text-align:left;padding:2px 0;opacity:.58;line-height:1.03;text-shadow:0 1px 8px #0009}.menu button.active{opacity:1}.menu button:hover{opacity:1}.footer{position:absolute;bottom:0;left:0;right:0;z-index:6;background:transparent;padding:0}.navrow{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;padding:0 26px 16px}.glass{height:56px;position:relative;overflow:hidden;background:rgba(215,220,225,.15);-webkit-backdrop-filter:blur(22px) saturate(145%);backdrop-filter:blur(22px) saturate(145%);border-top:1px solid rgba(255,255,255,.25)}.timeline{height:100%;position:relative;overflow:hidden;cursor:pointer;opacity:1;transition:opacity .2s}.timeline:hover{opacity:1}.strip{display:flex;height:36px;gap:3px;position:absolute;left:50%;top:10px;will-change:transform}.thumb{width:64px;height:36px;flex:none;object-fit:cover;background:#222;opacity:1}.playhead{position:absolute;top:5px;bottom:5px;left:50%;width:2px;background:#f13d30;z-index:2;pointer-events:none}.controls{display:flex;align-items:center;gap:5px;margin:0 0 1px auto;font-size:11px;min-height:25px}.controls button{width:31px;height:31px;border:1px solid rgba(255,255,255,.38);border-radius:2px;background:rgba(0,0,0,.12);color:#fff;padding:6px;display:grid;place-items:center;opacity:.9;transition:background .2s,border-color .2s}.controls button:hover{background:rgba(255,255,255,.17);border-color:#fff}.controls button svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.controls button svg.fill{fill:currentColor;stroke:none}.time{opacity:.55;font-variant-numeric:tabular-nums}.hint{display:none}.tag{display:none}@media(max-width:700px){.navrow{padding:0 14px 12px}.menu button{font-size:11px}.brand{font-size:14px;margin-bottom:6px}.glass{height:52px}.strip{top:8px}.hint{display:none}}
+
+/* V12 — quiet controls, larger Swiss navigation, borderless frosted dock */
+.brand-top{position:absolute;z-index:7;left:26px;top:24px;font-size:19px;line-height:1;font-weight:600;letter-spacing:-.025em;color:#fff;text-shadow:0 1px 9px rgba(0,0,0,.15);pointer-events:none}
+.menu{gap:1px}
+.menu button{position:relative;padding:3px 0 3px 18px;font-size:19px;line-height:1.02;letter-spacing:-.025em;text-shadow:0 1px 12px rgba(0,0,0,.25)}
+.menu button::before{content:"";position:absolute;left:0;top:50%;width:8px;height:8px;border-radius:50%;background:currentColor;transform:translateY(-50%) scale(0);opacity:0;transition:transform .22s ease,opacity .22s ease}
+.menu button.active::before{transform:translateY(-50%) scale(1);opacity:1}
+.navrow{align-items:flex-end;padding:0 26px 20px}
+.controls{gap:7px;margin-bottom:2px}
+.controls button{width:38px;height:38px;border:0!important;border-radius:50%;padding:10px;background:rgba(245,245,245,.17);-webkit-backdrop-filter:blur(18px) saturate(150%);backdrop-filter:blur(18px) saturate(150%);box-shadow:none;transition:background .2s,transform .2s}
+.controls button:hover{background:rgba(245,245,245,.3);transform:scale(1.05)}
+.controls button svg{width:17px;height:17px}
+.glass{height:59px;border:0!important;background:rgba(225,230,233,.20);-webkit-backdrop-filter:blur(28px) saturate(165%) brightness(1.09);backdrop-filter:blur(28px) saturate(165%) brightness(1.09);box-shadow:none}
+.strip{top:11px}
+.playhead{top:7px;bottom:7px}
+@media(max-width:700px){.brand-top{left:14px;top:17px;font-size:17px}.menu button{font-size:15px;padding-left:15px}.menu button::before{width:6px;height:6px}.navrow{padding:0 14px 15px}.glass{height:54px}.strip{top:9px}.controls button{width:34px;height:34px}}
+/* V13 — reduced frosted rail, left-anchored playhead, precise thumbnail states */
+.glass{height:44px!important;background:rgba(225,230,233,.105)!important;-webkit-backdrop-filter:blur(20px) saturate(125%)!important;backdrop-filter:blur(20px) saturate(125%)!important;border:0!important;box-shadow:none!important}
+.strip{left:0!important;top:4px!important;gap:4px!important}
+.thumb{border-radius:2px!important;opacity:.30!important;transition:opacity .14s linear;display:block}
+.thumb.active{opacity:1!important}
+.playhead{left:0!important;top:3px!important;bottom:3px!important;width:2px}
+@media(max-width:700px){.glass{height:44px!important}.strip{top:4px!important}}
+
+/* V14 — chapter markers, refined playhead and 25% inactive thumbnails */
+.glass{height:76px!important;background:rgba(225,230,233,.105)!important}
+.strip{top:20px!important;gap:0!important;left:0!important}
+.thumb{margin-right:4px;opacity:.25!important}
+.thumb.active{opacity:1!important}
+.chapter-divider{width:16px;height:36px;flex:none;position:relative;margin-right:4px;pointer-events:none}
+.chapter-divider::after{content:"";position:absolute;left:7px;top:0;width:2px;height:36px;background:rgba(255,255,255,.75);border-radius:1px}
+.chapter-divider .chapter-label{position:absolute;top:-15px;left:7px;font-family:Principal,Arial,sans-serif;font-size:10px;line-height:1;letter-spacing:-.01em;font-weight:600;color:rgba(255,255,255,.8);white-space:nowrap}
+.playhead{left:150px!important;top:20px!important;bottom:20px!important;width:2px;background:#f13d30}
+@media(max-width:700px){.glass{height:76px!important}.strip{top:20px!important}.playhead{left:150px!important}}
+
+/* V16 — compact filmstrip; chapter names float inside the thumbnails rather than in extra padding */
+.glass{height:46px!important}
+.strip{top:5px!important}
+.playhead{left:150px!important;top:5px!important;bottom:5px!important}
+.chapter-divider .chapter-label{top:4px!important;left:24px!important;z-index:5!important;padding:3px 5px!important;border-radius:2px!important;background:rgba(0,0,0,.50)!important;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);color:#fff!important;font-size:10px!important;line-height:1.05!important;text-shadow:0 1px 4px #0009}
+@media(max-width:700px){.glass{height:46px!important}.strip{top:5px!important}.playhead{left:150px!important;top:5px!important;bottom:5px!important}}
+
+/* V17 — two image-free slots for each chapter title, keeping timeline geometry intact */
+.chapter-title-slot{position:relative;background:transparent!important;overflow:visible;opacity:1!important;display:flex;align-items:center}
+.chapter-title-slot.active{opacity:1!important}
+.chapter-title{font-family:Principal,Arial,sans-serif;font-weight:600;font-size:10px;line-height:1.05;white-space:nowrap;position:relative;z-index:2;left:8px;color:#fff;pointer-events:none}
+.chapter-divider .chapter-label{display:none!important}
+
+/* V18 — subtle hairlines above every service item */
+.menu{gap:0!important;align-items:stretch}
+.menu button{display:block;width:100%;border-top:1px solid rgba(255,255,255,.22)!important;padding-top:9px!important;padding-bottom:9px!important;line-height:1.02!important}
+.menu button::before{top:50%}
+
+/* V19 — Swiss service menu: consistent left alignment, right active dot */
+.menu{gap:0!important;align-items:stretch!important}
+.menu button{position:relative!important;display:block!important;width:100%!important;padding:5px 19px 5px 0!important;border-top:1px solid rgba(255,255,255,.43)!important;text-shadow:none!important;line-height:1.02!important;text-align:left!important}
+.menu button::before{left:auto!important;right:0!important;top:50%!important;width:8px!important;height:8px!important}
+.menu button.active::before{transform:translateY(-50%) scale(1)!important;opacity:1!important}
+@media(max-width:700px){.menu button{padding:5px 16px 5px 0!important}.menu button::before{width:6px!important;height:6px!important}}
+
+/* V20 — a hairline timeline that reveals the existing frosted filmstrip on hover.
+   Keep the 46px interaction area to avoid moving the service menu. */
+.glass{height:46px!important;background:transparent!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;transition:background .22s ease,backdrop-filter .22s ease,-webkit-backdrop-filter .22s ease!important}
+.timeline{height:100%;cursor:pointer}
+.timeline::before{content:"";position:absolute;left:0;right:0;bottom:5px;height:1px;background:rgba(255,255,255,.48);pointer-events:none;transition:opacity .18s ease}
+.strip{opacity:0;pointer-events:none;transition:opacity .2s ease!important}
+.playhead{left:var(--timeline-progress,0%)!important;top:auto!important;bottom:1px!important;height:10px!important;width:2px!important;transition:height .22s ease,top .22s ease,bottom .22s ease!important}
+.glass:hover,.glass:focus-within{background:rgba(225,230,233,.105)!important;-webkit-backdrop-filter:blur(20px) saturate(125%)!important;backdrop-filter:blur(20px) saturate(125%)!important}
+.glass:hover .strip,.glass:focus-within .strip{opacity:1;pointer-events:auto}
+.glass:hover .playhead,.glass:focus-within .playhead{left:150px!important;top:5px!important;bottom:5px!important;height:auto!important}
+.glass:hover .timeline::before,.glass:focus-within .timeline::before{opacity:0}
+@media(hover:none){.glass:active{background:rgba(225,230,233,.105)!important;-webkit-backdrop-filter:blur(20px) saturate(125%)!important;backdrop-filter:blur(20px) saturate(125%)!important}.glass:active .strip{opacity:1}.glass:active .playhead{left:150px!important;top:5px!important;bottom:5px!important;height:auto!important}}
+
+/* V21 — service menu collapses to active entry; expands upwards on hover.
+   The nav area remains fixed so the playback controls never jump. */
+.navrow{position:relative;min-height:155px;align-items:flex-end}
+.menu{position:absolute;left:26px;bottom:20px;width:max-content;min-width:220px;height:145px;display:flex!important;flex-direction:column;justify-content:flex-end;align-items:stretch;gap:0!important}
+.menu button{display:none!important;flex:none}
+.menu button.active{display:block!important}
+.menu:hover button,.menu:focus-within button{display:block!important}
+.menu:hover button:not(.active),.menu:focus-within button:not(.active){opacity:.58}
+.menu:hover button:hover,.menu:focus-within button:focus-visible{opacity:1}
+/* Raise the collapsed hairline and its red indicator from the browser edge. */
+.timeline::before{bottom:17px!important}
+.glass:not(:hover):not(:focus-within) .playhead{bottom:13px!important}
+@media(max-width:700px){.menu{left:14px;bottom:15px;min-width:190px;height:130px}.navrow{min-height:145px}}
+
+/* V22 — Lineto-informed editorial Swiss interface */
+:root{--ui-paper:#e7eee7;--ui-line:rgba(231,238,231,.42);--ui-green:#d6f56b}
+.brand-top{top:20px!important;left:24px!important;font-size:23px!important;letter-spacing:-.045em!important;text-shadow:none!important;z-index:10}
+.brand-top::after{content:'';font-size:11px;letter-spacing:0;font-weight:600;vertical-align:baseline;margin-left:12px;color:var(--ui-paper);opacity:.75}
+body::after{content:'';position:fixed;right:24px;top:24px;z-index:10;font-size:11px;line-height:1;letter-spacing:.015em;color:var(--ui-paper);pointer-events:none}
+.footer{color:var(--ui-paper)!important}
+.navrow{padding:0 24px 18px!important;min-height:150px!important}
+.menu{left:24px!important;bottom:18px!important;min-width:265px!important;height:143px!important;z-index:8}
+.menu button{font-size:17px!important;letter-spacing:-.035em!important;padding:7px 19px 7px 0!important;border-top:1px solid var(--ui-line)!important;color:var(--ui-paper)!important;line-height:1!important;transition:color .18s,opacity .18s!important}
+.menu button.active{opacity:1!important}
+.menu button::before{background:var(--ui-green)!important;width:7px!important;height:7px!important}
+.menu:hover button:not(.active){opacity:.65!important}
+.menu:hover button:hover{opacity:1!important;color:var(--ui-green)!important}
+.controls{gap:0!important;margin-bottom:0!important;border-top:1px solid var(--ui-line)!important}
+.controls button{background:transparent!important;border:0!important;border-radius:0!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;width:44px!important;height:36px!important;padding:10px!important;box-shadow:none!important}
+.controls button:hover{background:rgba(214,245,107,.16)!important;transform:none!important;color:var(--ui-green)!important}
+.controls button svg{width:16px!important;height:16px!important}
+.glass{background:transparent!important}
+.timeline::before{background:rgba(231,238,231,.72)!important;height:1px!important;bottom:20px!important;left:24px!important;right:24px!important}
+.glass:not(:hover):not(:focus-within) .playhead{bottom:15px!important;background:var(--ui-green)!important;height:11px!important}
+.glass:hover,.glass:focus-within{background:rgba(13,29,24,.58)!important;-webkit-backdrop-filter:blur(22px) saturate(110%)!important;backdrop-filter:blur(22px) saturate(110%)!important}
+.glass:hover .playhead,.glass:focus-within .playhead{background:var(--ui-green)!important}
+.thumb{border-radius:0!important}
+.chapter-divider .chapter-label{border-radius:0!important;background:rgba(9,24,17,.85)!important;color:var(--ui-paper)!important;font-size:10px!important}
+@media(max-width:700px){.brand-top{left:15px!important;top:18px!important;font-size:19px!important}.brand-top::after{font-size:9px;margin-left:7px}body::after{right:15px;top:21px;font-size:9px;content:'MTL / QC'}.navrow{padding:0 15px 14px!important}.menu{left:15px!important;bottom:14px!important;min-width:215px!important;height:128px!important}.menu button{font-size:14px!important;padding:7px 16px 7px 0!important}.timeline::before{left:15px!important;right:15px!important}}
+
+/* V24 — monochrome difference blending: invert luminance without coloured complements */
+.brand-top{color:#fff!important;mix-blend-mode:difference;filter:grayscale(1) contrast(1.35);isolation:auto}
+.menu{mix-blend-mode:difference;filter:grayscale(1) contrast(1.35)}
+.menu button{color:#fff!important;text-shadow:none!important}
+.menu button:hover{color:#fff!important}
+.menu:hover button:hover{color:#fff!important}
+.menu button::before{background:#fff!important}
+.controls{mix-blend-mode:difference;filter:grayscale(1) contrast(1.35)}
+.controls button{color:#fff!important}
+.controls button:hover{color:#fff!important;background:transparent!important}
+/* Keep timeline's green accent and frosted thumbnails unaffected. */
+
+/* V27 — menu closer to the collapsed timeline; rise smoothly as filmstrip opens */
+.menu{bottom:5px!important;transform:translate3d(0,0,0);transition:transform 240ms cubic-bezier(.22,1,.36,1)!important;will-change:transform}
+.footer:has(.glass:hover) .menu,.footer:has(.glass:focus-within) .menu{transform:translate3d(0,-34px,0)}
+@media(max-width:700px){.menu{bottom:5px!important}.footer:has(.glass:hover) .menu,.footer:has(.glass:focus-within) .menu{transform:translate3d(0,-34px,0)}}
+@media(prefers-reduced-motion:reduce){.menu{transition:none!important}}
+/* V28 — retirer les filets au-dessus des éléments typographiques et pictogrammes */
+.menu button,.controls{border-top:0!important}
+/* V29 — menu Services 10 px plus proche de la timeline */
+.menu{bottom:-5px!important}
+@media(max-width:700px){.menu{bottom:-5px!important}}
+
+/* V30 — menu 5 px plus haut et commandes alignées sur la ligne du service actif */
+.menu{bottom:0px!important}
+.controls{transform:translateY(10px)!important}
+@media(max-width:700px){.menu{bottom:0px!important}.controls{transform:translateY(10px)!important}}
+/* V31 — boutons son et lecture 5 px plus bas */
+.controls{transform:translateY(15px)!important}
+@media(max-width:700px){.controls{transform:translateY(15px)!important}}
+
+/* V39 — micro-fondu au noir, commandes sur la ligne typographique et dock solidaire */
+.end-fade{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none;z-index:2;will-change:opacity}
+.controls{transform:translate3d(0,15px,0)!important;transition:transform 240ms cubic-bezier(.22,1,.36,1)!important;will-change:transform}
+.footer:has(.glass:hover) .controls,.footer:has(.glass:focus-within) .controls{transform:translate3d(0,-19px,0)!important}
+@media(max-width:700px){.controls{transform:translate3d(0,15px,0)!important}.footer:has(.glass:hover) .controls,.footer:has(.glass:focus-within) .controls{transform:translate3d(0,-19px,0)!important}}
+@media(prefers-reduced-motion:reduce){.controls{transition:none!important}}
+.media-notice{display:none;position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:20;max-width:85vw;padding:14px 18px;background:#111;color:#fff;border:1px solid #666;font:13px Arial,sans-serif;text-align:center}
+
+/* V47 — Only top-left Principal and bottom-left service menu */
+.brand-top{font-size:20px!important}
+.menu button{font-size:20px!important}
+@media(max-width:700px){.brand-top{font-size:20px!important}.menu button{font-size:20px!important}}
+</style></head><body><div id="reelError" style="display:none;position:fixed;z-index:999;top:50%;left:50%;transform:translate(-50%,-50%);color:white;background:#111;padding:20px;font:14px Arial"></div><div class="screen"><video id="reel" class="video" playsinline preload="auto"></video><div class="end-fade" id="endFade"></div><div class="transition" id="transition"><div class="scene" id="scene"><div class="green" id="green"></div><div class="txt principal" id="principal">Principal</div><div class="txt service" id="service">Service:</div><div class="txt name" id="name">Identité</div></div></div></div><div class="brand-top">Principal</div><div class="footer"><div class="navrow"><nav class="menu"><button data-s="0">Identité visuelle</button><button data-s="1">Expérience numérique</button><button data-s="2">Signalétique</button><button data-s="3">Campagnes</button></nav><div class="controls"><button id="toggle" aria-label="Pause" title="Lecture / pause"></button><button id="mute" aria-label="Couper le son" title="Activer / couper le son"></button></div></div><div class="glass"><div class="timeline" id="timeline"><div class="strip" id="strip"></div><div class="playhead"></div></div></div></div><div class="tag" id="tag"></div><span class="time" id="clock" hidden></span><audio id="signaletiqueAudio" src="Lemon Lime.mp3" preload="auto"></audio><audio id="campagnesAudio" src="JAMES HOLDEN - Lump.mp3" preload="auto"></audio><audio id="transitionAudio" src="reference-audio.mp3" preload="auto"></audio><script>
+window.addEventListener('error', function(e) {
+  const el=document.getElementById('reelError');
+  if(el){el.style.display='block';el.textContent='Erreur JavaScript : '+(e.message||'inconnue')+(e.filename?' — '+e.filename.split('/').pop()+':'+e.lineno:'');}
+});
+</script><script src="app.js"></script></body></html>
