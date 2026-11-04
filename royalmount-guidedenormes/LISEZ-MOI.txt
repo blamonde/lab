@@ -1,0 +1,4 @@
+Royalmount — Guide web V10
+
+Ouvrez index.html dans un navigateur. Conservez les dossiers assets et visuals au même niveau.
+Cette version simplifie les métadonnées d’interface, ajuste la typographie et utilise le logo officiel en haut à gauche.
