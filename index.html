@@ -1,23 +1,476 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Principal — Lab</title>
-<style>
-@font-face{font-family:Principal;src:url('./StudioPrincipal-SemiBold.otf') format('opentype');font-weight:600;font-display:swap}
-:root{--bg:#101010;--fg:#f6f6f3;--muted:#888;--line:#393939;--accent:#ff4a24;--font:Principal,Arial,Helvetica,sans-serif}
-*{box-sizing:border-box}html{font-synthesis:none}body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font);-webkit-font-smoothing:antialiased}a{color:inherit;text-decoration:none}.shell{padding:0 28px;max-width:1800px;margin:auto;min-height:100svh;display:flex;flex-direction:column}header{height:58px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);font-size:15px}.brand{display:flex;gap:12px;align-items:baseline}.brand span:last-child{color:var(--muted)}.header-right{display:flex;gap:24px;align-items:center;font-size:12px}.live{display:flex;gap:8px;align-items:center}.dot{height:6px;width:6px;border-radius:50%;background:var(--accent)}.muted{color:var(--muted)}main{flex:1;padding:44px 0 65px}.intro{display:flex;justify-content:space-between;gap:32px;align-items:end;padding-bottom:40px}h1{font-size:clamp(42px,6.4vw,96px);line-height:.88;letter-spacing:-.055em;font-weight:600;margin:0}.intro p{max-width:270px;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.5;color:#aaa;margin:0 0 3px}.list-head{display:grid;grid-template-columns:52px minmax(0,1fr) 135px 24px;gap:12px;border-top:1px solid var(--fg);border-bottom:1px solid var(--line);padding:12px 8px;font:10px Arial,Helvetica,sans-serif;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}.tool{display:grid;grid-template-columns:52px minmax(0,1fr) 135px 24px;gap:12px;align-items:center;min-height:63px;padding:8px;border-bottom:1px solid var(--line);transition:background .2s,color .2s,padding .2s}.tool:hover,.tool:focus-visible{background:var(--fg);color:var(--bg);padding-left:16px;outline:0}.num,.category{font:11px Arial,Helvetica,sans-serif;color:var(--muted)}.tool:hover .num,.tool:hover .category,.tool:focus-visible .num,.tool:focus-visible .category{color:#666}.name{font-size:clamp(18px,2.15vw,29px);letter-spacing:-.035em;line-height:1.1}.arrow{text-align:right;font-family:Arial,sans-serif;font-size:21px;transition:transform .2s}.tool:hover .arrow{transform:translate(2px,-2px)}footer{border-top:1px solid var(--line);height:55px;display:flex;align-items:center;justify-content:space-between;font:11px Arial,Helvetica,sans-serif;color:var(--muted)}@media(max-width:650px){.shell{padding:0 16px}header{height:54px}.header-right{gap:12px}main{padding:44px 0}.intro{display:block;padding-bottom:42px}.intro p{margin-top:24px}.list-head,.tool{grid-template-columns:30px minmax(0,1fr) 22px;gap:8px}.list-head span:nth-child(3),.category{display:none}.tool{min-height:62px}.name{font-size:20px}footer{height:56px}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Principal — Lab</title>
+
+  <style>
+    /* ==========================================
+       01. TYPOGRAPHIE
+       ========================================== */
+
+    @font-face {
+      font-family: "Principal";
+      src: url("./StudioPrincipal-SemiBold.otf") format("opentype");
+      font-weight: 600;
+      font-display: swap;
+    }
+
+
+    /* ==========================================
+       02. VARIABLES
+       Modifier ici les couleurs et la fonte
+       ========================================== */
+
+    :root {
+      --bg: #101010;
+      --fg: #f6f6f3;
+      --muted: #888888;
+      --line: #393939;
+      --accent: #ff4a24;
+
+      --font: "Principal", Arial, Helvetica, sans-serif;
+    }
+
+
+    /* ==========================================
+       03. BASE
+       ========================================== */
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      font-synthesis: none;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--font);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .shell {
+      max-width: 1800px;
+      min-height: 100svh;
+      margin: auto;
+      padding: 0 28px;
+
+      display: flex;
+      flex-direction: column;
+    }
+
+
+    /* ==========================================
+       04. HEADER
+       ========================================== */
+
+    header {
+      height: 58px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      border-bottom: 1px solid var(--line);
+      font-size: 15px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+    }
+
+    .brand span:last-child {
+      color: var(--muted);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      font-size: 12px;
+    }
+
+    .live {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+
+    /* ==========================================
+       05. MAIN / INTRO
+       ========================================== */
+
+    main {
+      flex: 1;
+      padding: 44px 0 65px;
+    }
+
+    .intro {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 32px;
+
+      padding-bottom: 40px;
+    }
+
+    h1 {
+      margin: 0;
+
+      font-size: clamp(42px, 6.4vw, 96px);
+      font-weight: 600;
+      line-height: 0.88;
+      letter-spacing: -0.045em;
+    }
+
+    .intro p {
+      max-width: 270px;
+      margin: 0 0 3px;
+
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 12px;
+      line-height: 1.5;
+      color: #aaaaaa;
+    }
+
+
+    /* ==========================================
+       06. LISTE — EN-TÊTE
+       ========================================== */
+
+    .list-head {
+      display: grid;
+      grid-template-columns: 52px minmax(0, 1fr) 135px 24px;
+      gap: 12px;
+
+      padding: 12px 8px;
+
+      border-top: 1px solid var(--fg);
+      border-bottom: 1px solid var(--line);
+
+      font: 10px Arial, Helvetica, sans-serif;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+
+    /* ==========================================
+       07. LISTE — PROJETS
+       ========================================== */
+
+    .tool {
+      display: grid;
+      grid-template-columns: 52px minmax(0, 1fr) 135px 24px;
+      gap: 12px;
+      align-items: center;
+
+      min-height: 63px;
+      padding: 8px;
+
+      border-bottom: 1px solid var(--line);
+
+      transition:
+        background 0.2s,
+        color 0.2s,
+        padding 0.2s;
+    }
+
+    .num,
+    .category {
+      font: 11px Arial, Helvetica, sans-serif;
+      color: var(--muted);
+    }
+
+    .name {
+      font-size: clamp(18px, 2.15vw, 29px);
+      letter-spacing: -0.035em;
+      line-height: 1.1;
+    }
+
+    .arrow {
+      text-align: right;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 21px;
+
+      transition: transform 0.2s;
+    }
+
+
+    /* ==========================================
+       08. INTERACTIONS / HOVER
+       ========================================== */
+
+    .tool:hover,
+    .tool:focus-visible {
+      background: var(--fg);
+      color: var(--bg);
+      padding-left: 16px;
+      outline: 0;
+    }
+
+    .tool:hover .num,
+    .tool:hover .category,
+    .tool:focus-visible .num,
+    .tool:focus-visible .category {
+      color: #666666;
+    }
+
+    .tool:hover .arrow {
+      transform: translate(2px, -2px);
+    }
+
+
+    /* ==========================================
+       09. FOOTER
+       ========================================== */
+
+    footer {
+      height: 55px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      border-top: 1px solid var(--line);
+
+      font: 11px Arial, Helvetica, sans-serif;
+      color: var(--muted);
+    }
+
+
+    /* ==========================================
+       10. RESPONSIVE — MOBILE
+       ========================================== */
+
+    @media (max-width: 650px) {
+
+      .shell {
+        padding: 0 16px;
+      }
+
+      header {
+        height: 54px;
+      }
+
+      .header-right {
+        gap: 12px;
+      }
+
+      main {
+        padding: 44px 0;
+      }
+
+      .intro {
+        display: block;
+        padding-bottom: 42px;
+      }
+
+      .intro p {
+        margin-top: 24px;
+      }
+
+      .list-head,
+      .tool {
+        grid-template-columns: 30px minmax(0, 1fr) 22px;
+        gap: 8px;
+      }
+
+      .list-head span:nth-child(3),
+      .category {
+        display: none;
+      }
+
+      .tool {
+        min-height: 62px;
+      }
+
+      .name {
+        font-size: 20px;
+      }
+
+      footer {
+        height: 56px;
+      }
+    }
+
+
+    /* ==========================================
+       11. ACCESSIBILITÉ
+       ========================================== */
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        transition: none !important;
+      }
+    }
+
+  </style>
 </head>
-<body><div class="shell"><header><div class="brand"><span>Principal</span><span>Lab</span></div><div class="header-right"><span class="live"><span class="dot"></span>Experimental tools</span><span class="muted">2026</span></div></header>
-<main><section class="intro"><h1>Tools &amp;<br>Experiments<span style="color:var(--accent)">.</span></h1><p>A collection of tools, prototypes and visual experiments developed at Principal.</p></section>
-<div class="list-head"><span>No.</span><span>Project</span><span>Type</span><span></span></div>
-<nav aria-label="Principal Lab tools">
-<a class="tool" href="duotone-grey-halftone.html"><span class="num">01</span><span class="name">Halftone Grey (SDM)</span><span class="category">Image processing</span><span class="arrow">↗</span></a>
-<a class="tool" href="cac-brandmachine.html"><span class="num">02</span><span class="name">CAC Brand Machine</span><span class="category">Brand tool</span><span class="arrow">↗</span></a>
-<a class="tool" href="Principal-Reel/index.html"><span class="num">03</span><span class="name">Principal Interactive Reel</span><span class="category">Interactive</span><span class="arrow">↗</span></a>
-<a class="tool" href="royalmount-guidedenormes/index.html"><span class="num">04</span><span class="name">Online Brand Guidelines</span><span class="category">Brand platform</span><span class="arrow">↗</span></a>
-<a class="tool" href="TrameBuilder-V3.html"><span class="num">05</span><span class="name">Halftone Builder</span><span class="category">Image processing</span><span class="arrow">↗</span></a>
-<a class="tool" href="tritone.html"><span class="num">06</span><span class="name">Tritone Image</span><span class="category">Image processing</span><span class="arrow">↗</span></a>
-<a class="tool" href="cac-tool.html"><span class="num">07</span><span class="name">CAC Online Tool</span><span class="category">Brand tool</span><span class="arrow">↗</span></a>
-</nav></main><footer><span>Principal — Creative experiments</span><span>© Principal 2026</span></footer></div></body></html>
+
+<body>
+
+  <div class="shell">
+
+    <!-- ======================================
+         HEADER
+         ====================================== -->
+
+    <header>
+
+      <div class="brand">
+        <span>Principal</span>
+        <span>Lab</span>
+      </div>
+
+      <div class="header-right">
+
+        <span class="live">
+          <span class="dot"></span>
+          Experimental tools
+        </span>
+
+        <span class="muted">2026</span>
+
+      </div>
+
+    </header>
+
+
+    <!-- ======================================
+         MAIN
+         ====================================== -->
+
+    <main>
+
+      <!-- INTRO -->
+
+      <section class="intro">
+
+        <h1>
+          Tools &amp;<br>
+          Experiments<span style="color: var(--accent)">.</span>
+        </h1>
+
+        <p>
+          A collection of tools, prototypes and visual
+          experiments developed at Principal.
+        </p>
+
+      </section>
+
+
+      <!-- LIST HEADER -->
+
+      <div class="list-head">
+        <span>No.</span>
+        <span>Project</span>
+        <span>Type</span>
+        <span></span>
+      </div>
+
+
+      <!-- ====================================
+           PROJETS
+           Ajouter ou modifier les outils ici
+           ==================================== -->
+
+      <nav aria-label="Principal Lab tools">
+
+        
+        <a class="tool" href="Principal-Reel/index.html">
+          <span class="num">03</span>
+          <span class="name">Principal Interactive Reel</span>
+          <span class="category">Interactive</span>
+          <span class="arrow">↗</span>
+        </a>
+
+        <a class="tool" href="royalmount-guidedenormes/index.html">
+          <span class="num">04</span>
+          <span class="name">Online Brand Guidelines</span>
+          <span class="category">Brand platform</span>
+          <span class="arrow">↗</span>
+        </a>
+
+        <a class="tool" href="duotone-grey-halftone.html">
+          <span class="num">01</span>
+          <span class="name">Halftone Grey (SDM)</span>
+          <span class="category">Image processing</span>
+          <span class="arrow">↗</span>
+        </a>
+
+        <a class="tool" href="TrameBuilder-V3.html">
+          <span class="num">05</span>
+          <span class="name">Halftone Builder</span>
+          <span class="category">Image processing</span>
+          <span class="arrow">↗</span>
+        </a>
+
+        <a class="tool" href="tritone.html">
+          <span class="num">06</span>
+          <span class="name">Tritone Image</span>
+          <span class="category">Image processing</span>
+          <span class="arrow">↗</span>
+        </a>
+
+        <a class="tool" href="cac-brandmachine.html">
+          <span class="num">02</span>
+          <span class="name">CAC Brand Machine</span>
+          <span class="category">Brand tool</span>
+          <span class="arrow">↗</span>
+        </a>
+
+        <!-- 07 -->
+        <a class="tool" href="cac-tool.html">
+          <span class="num">07</span>
+          <span class="name">CAC Online Tool</span>
+          <span class="category">Brand tool</span>
+          <span class="arrow">↗</span>
+        </a>
+
+      </nav>
+
+    </main>
+
+
+    <!-- ======================================
+         FOOTER
+         ====================================== -->
+
+    <footer>
+      <span>Principal — Creative experiments</span>
+      <span>© Principal 2026</span>
+    </footer>
+
+  </div>
+
+</body>
+</html>
