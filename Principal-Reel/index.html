@@ -167,6 +167,15 @@ body::after{content:'';position:fixed;right:24px;top:24px;z-index:10;font-size:1
 
 /* Principal Reel 03: supprimer le point indicateur à droite des services */
 .menu button::before,.menu button.active::before{display:none!important;content:none!important}
+
+/* Principal Reel 05 — Chrome/Safari: ouverture uniquement au survol réel.
+   :focus-within gardait le menu ouvert après un clic sur Chrome. */
+@media (hover:hover) and (pointer:fine){
+  .menu:not(:hover) button:not(.active){display:none!important}
+  .menu:hover button{display:block!important}
+}
+/* Accessibilité clavier : le menu s’ouvre avec Tab, pas après un clic souris. */
+.menu:has(button:focus-visible) button{display:block!important}
 </style></head><body><div id="reelError" style="display:none;position:fixed;z-index:999;top:50%;left:50%;transform:translate(-50%,-50%);color:white;background:#111;padding:20px;font:14px Arial"></div><div class="screen"><video id="reel" class="video" autoplay muted playsinline webkit-playsinline preload="auto"></video><div class="end-fade" id="endFade"></div><div class="transition" id="transition"><div class="scene" id="scene"><div class="green" id="green"></div><div class="txt principal" id="principal">Principal</div><div class="txt service" id="service">Service:</div><div class="txt name" id="name">Identité</div></div></div></div><div class="brand-top">Principal</div><div class="footer"><div class="navrow"><nav class="menu"><span class="service-prefix" aria-hidden="true">Service:</span><button data-s="0">Identité visuelle</button><button data-s="1">Expérience numérique</button><button data-s="2">Signalétique</button><button data-s="3">Campagnes</button></nav><div class="controls"><button id="toggle" aria-label="Pause" title="Lecture / pause"></button><button id="mute" aria-label="Couper le son" title="Activer / couper le son"></button></div></div><div class="glass"><div class="timeline" id="timeline"><div class="strip" id="strip"></div><div class="playhead"></div></div></div></div><div class="tag" id="tag"></div><span class="time" id="clock" hidden></span><audio id="transitionAudio" src="reference-audio.mp3" preload="auto"></audio><script>
 window.addEventListener('error', function(e) {
   const el=document.getElementById('reelError');
